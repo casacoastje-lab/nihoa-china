@@ -53,7 +53,7 @@ export default function Navbar() {
               <Link 
                 key={link.to} 
                 to={link.to} 
-                className="group flex flex-col items-center transition-colors hover:text-primary"
+                className="group flex flex-col items-center transition-colors hover:text-primary text-foreground"
               >
                 <span className="text-sm font-medium tracking-wide">{link.label} {link.zh}</span>
                 <motion.div 
@@ -133,7 +133,7 @@ export default function Navbar() {
             <Link 
               key={link.to} 
               to={link.to} 
-              className="flex items-center justify-between text-xl font-serif"
+              className="flex items-center justify-between text-xl font-serif text-foreground"
               onClick={() => setIsMenuOpen(false)}
             >
               <span>{link.label}</span>

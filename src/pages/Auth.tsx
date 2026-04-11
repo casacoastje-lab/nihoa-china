@@ -89,7 +89,7 @@ export default function Auth() {
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-12 bg-card/50 p-2 rounded-full border border-border h-20">
+          <TabsList className="grid w-full grid-cols-2 mb-12 bg-card p-2 rounded-full border-none h-20">
             <TabsTrigger value="login" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-xl transition-all h-full">
               Login 登录
             </TabsTrigger>
@@ -137,7 +137,7 @@ export default function Auth() {
                         />
                       </div>
                     </CardContent>
-                    <CardFooter className="p-12 pt-0">
+                    <CardFooter className="p-12 pt-0 bg-card border-none">
                       <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white rounded-full h-16 text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={loading}>
                         {loading ? 'Opening Scroll...' : (
                           <>
@@ -202,10 +202,10 @@ export default function Auth() {
                       <div className="space-y-3">
                         <Label htmlFor="role" className="font-serif italic text-lg ml-2">I want to join as a:</Label>
                         <Select value={role} onValueChange={setRole}>
-                          <SelectTrigger className="h-14 rounded-2xl bg-muted/50 border-border font-serif text-lg px-6">
+                          <SelectTrigger className="h-14 rounded-2xl bg-muted/50 border-none font-serif text-lg px-6 focus:ring-primary">
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
-                          <SelectContent className="rounded-2xl border-border bg-popover shadow-xl">
+                          <SelectContent className="rounded-2xl border-border bg-popover shadow-xl w-[300px]">
                             <SelectItem value="reader" className="font-serif italic py-3">Reader (Explore & Comment)</SelectItem>
                             <SelectItem value="blogger" className="font-serif italic py-3">Blogger (Share your stories)</SelectItem>
                           </SelectContent>
@@ -221,7 +221,7 @@ export default function Auth() {
                         )}
                       </div>
                     </CardContent>
-                    <CardFooter className="p-12 pt-0">
+                    <CardFooter className="p-12 pt-0 bg-card border-none">
                       <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white rounded-full h-16 text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={loading}>
                         {loading ? 'Inscribing...' : (
                           <>
