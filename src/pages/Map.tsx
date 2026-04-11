@@ -249,7 +249,7 @@ export default function MapPage() {
               >
                 <div className="flex items-start space-x-3">
                   <div className="w-14 h-14 rounded-[1rem] overflow-hidden shrink-0 shadow-md">
-                    <img src={l.image_url} alt={l.name} className="w-full h-full object-cover" />
+                    <img src={l.image_url} alt={l.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                   <div className="flex-grow space-y-0.5">
                     <div className="flex items-center justify-between">

@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
 import { Badge } from '@/src/components/ui/badge';
 import { Input } from '@/src/components/ui/input';
-import { Search, Filter, Calendar, User as UserIcon } from 'lucide-react';
+import { Search, Filter, Calendar, User as UserIcon, ArrowRight } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 
@@ -187,25 +187,5 @@ export default function Blog() {
         </motion.div>
       )}
     </div>
-  );
-}
-
-function ArrowRight(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
-    </svg>
   );
 }

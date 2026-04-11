@@ -557,12 +557,23 @@ export default function Learn() {
 
   useEffect(() => {
     const loadVoices = () => {
-      window.speechSynthesis.getVoices();
+      if (window.speechSynthesis) {
+        window.speechSynthesis.getVoices();
+      }
     };
+    
     loadVoices();
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-      window.speechSynthesis.onvoiceschanged = loadVoices;
+    
+    if (window.speechSynthesis) {
+      window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
     }
+    
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.removeEventListener('voiceschanged', loadVoices);
+        window.speechSynthesis.cancel();
+      }
+    };
   }, []);
 
   const handleQuizAnswer = (selected: string) => {
@@ -633,7 +644,7 @@ export default function Learn() {
 
         <AnimatePresence mode="wait">
           {/* Language Games */}
-          <TabsContent value="language" className="outline-none">
+          <TabsContent key="language" value="language" className="outline-none">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
               <div className="lg:col-span-2">
                 <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
@@ -691,7 +702,7 @@ export default function Learn() {
           </TabsContent>
 
           {/* HSK 1 Lab */}
-          <TabsContent value="hsk1" className="outline-none">
+          <TabsContent key="hsk1" value="hsk1" className="outline-none">
             <div className="max-w-4xl mx-auto">
               <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
                 <div className="bg-foreground text-background p-12">
@@ -710,7 +721,7 @@ export default function Learn() {
           </TabsContent>
 
           {/* History Games */}
-          <TabsContent value="history" className="outline-none">
+          <TabsContent key="history" value="history" className="outline-none">
             <div className="max-w-4xl mx-auto">
               <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
                 <div className="bg-foreground text-background p-12">
@@ -729,7 +740,7 @@ export default function Learn() {
           </TabsContent>
 
           {/* Culture Games */}
-          <TabsContent value="culture" className="outline-none">
+          <TabsContent key="culture" value="culture" className="outline-none">
             <div className="max-w-2xl mx-auto">
               <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
                 <div className="bg-primary text-white p-12">

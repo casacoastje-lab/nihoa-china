@@ -99,7 +99,7 @@ export default function Auth() {
           </TabsList>
 
           <AnimatePresence mode="wait">
-            <TabsContent value="login" className="mt-0">
+            <TabsContent key="login" value="login" className="mt-0">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -151,7 +151,7 @@ export default function Auth() {
               </motion.div>
             </TabsContent>
 
-            <TabsContent value="register" className="mt-0">
+            <TabsContent key="register" value="register" className="mt-0">
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}

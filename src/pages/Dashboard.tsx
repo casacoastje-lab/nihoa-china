@@ -127,7 +127,7 @@ export default function Dashboard() {
           // Combine for Recent Activity
           const combined = [
             ...(posts || []).slice(0, 5).map(p => ({
-              id: p.id,
+              id: `post-${p.id}`,
               time: p.created_at,
               title: p.title,
               desc: p.content.substring(0, 100) + '...',
@@ -135,7 +135,7 @@ export default function Dashboard() {
               color: 'bg-red-500'
             })),
             ...(comments || []).map(c => ({
-              id: c.id,
+              id: `comment-${c.id}`,
               time: c.created_at,
               title: `Commented on: ${c.blog_posts?.title || 'a post'}`,
               desc: c.content,
@@ -170,6 +170,8 @@ export default function Dashboard() {
           const totalDayContrib = dayPosts + dayComments;
           return {
             ...day,
+            posts: dayPosts,
+            comments: dayComments,
             contributions: totalDayContrib,
             // Use real contributions as the primary metric, views can be a multiple for visual depth
             views: totalDayContrib * 10 
@@ -229,7 +231,19 @@ export default function Dashboard() {
   };
 
   const handleRestrictUser = async (userId: string) => {
-    toast.info('User restriction logic would go here.');
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ role: 'reader' })
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      setAllUsers(allUsers.map(u => u.id === userId ? { ...u, role: 'reader' } : u));
+      toast.success('User restricted to Reader role.');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to restrict user');
+    }
   };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -392,7 +406,7 @@ export default function Dashboard() {
         </TabsList>
 
         <AnimatePresence mode="wait">
-          <TabsContent value="overview" className="space-y-20 outline-none">
+          <TabsContent key="overview" value="overview" className="space-y-20 outline-none">
             {/* Analytics Overview Chart */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -409,9 +423,13 @@ export default function Dashboard() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData}>
                       <defs>
-                        <linearGradient id="colorViewsOverview" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient id="colorPosts" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
                           <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                        </linearGradient>
+                        <linearGradient id="colorComments" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -429,7 +447,8 @@ export default function Dashboard() {
                       <Tooltip 
                         contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '1rem', border: '1px solid var(--border)', fontFamily: 'var(--font-serif)' }}
                       />
-                      <Area type="monotone" dataKey="views" stroke="var(--primary)" fillOpacity={1} fill="url(#colorViewsOverview)" strokeWidth={3} />
+                      <Area type="monotone" dataKey="posts" name="Posts 文章" stroke="var(--primary)" fillOpacity={1} fill="url(#colorPosts)" strokeWidth={3} />
+                      <Area type="monotone" dataKey="comments" name="Comments 评论" stroke="#10b981" fillOpacity={1} fill="url(#colorComments)" strokeWidth={3} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -446,8 +465,8 @@ export default function Dashboard() {
                 </div>
                 
                 <div className="relative pl-8 space-y-12 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-border">
-                  {recentActivities.length > 0 ? recentActivities.map((activity, i) => (
-                    <motion.div key={i} variants={itemVariants} className="relative">
+                  {recentActivities.length > 0 ? recentActivities.map((activity) => (
+                    <motion.div key={activity.id} variants={itemVariants} className="relative">
                       <div className={`absolute -left-[36px] top-1.5 h-4 w-4 rounded-full border-4 border-background ${activity.color}`} />
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
@@ -483,7 +502,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value="my-posts" className="outline-none">
+          <TabsContent key="my-posts" value="my-posts" className="outline-none">
             <Card className="rounded-[3rem] border-none shadow-sm bg-card p-12">
               <div className="flex justify-between items-end mb-12">
                 <div>
@@ -533,7 +552,7 @@ export default function Dashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="users" className="outline-none">
+          <TabsContent key="users" value="users" className="outline-none">
             <Card className="rounded-[3rem] border-none shadow-sm bg-card p-12">
               <div className="mb-12">
                 <h2 className="text-4xl font-serif font-bold">User Management 用户管理</h2>
@@ -588,7 +607,7 @@ export default function Dashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="analytics" className="outline-none">
+          <TabsContent key="analytics" value="analytics" className="outline-none">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <Card className="rounded-[3rem] border-none shadow-sm bg-card p-12">
                 <div className="mb-10">
@@ -599,9 +618,13 @@ export default function Dashboard() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData}>
                       <defs>
-                        <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient id="colorPostsDetail" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
                           <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                        </linearGradient>
+                        <linearGradient id="colorCommentsDetail" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -619,7 +642,8 @@ export default function Dashboard() {
                       <Tooltip 
                         contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '1rem', border: '1px solid var(--border)', fontFamily: 'var(--font-serif)' }}
                       />
-                      <Area type="monotone" dataKey="views" stroke="var(--primary)" fillOpacity={1} fill="url(#colorViews)" strokeWidth={3} />
+                      <Area type="monotone" dataKey="posts" name="Posts 文章" stroke="var(--primary)" fillOpacity={1} fill="url(#colorPostsDetail)" strokeWidth={3} />
+                      <Area type="monotone" dataKey="comments" name="Comments 评论" stroke="#10b981" fillOpacity={1} fill="url(#colorCommentsDetail)" strokeWidth={3} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -657,7 +681,7 @@ export default function Dashboard() {
             </div>
           </TabsContent>
 
-          <TabsContent value="edit-profile" className="outline-none">
+          <TabsContent key="edit-profile" value="edit-profile" className="outline-none">
             <Card className="rounded-[3rem] border-none shadow-sm bg-card p-12">
               <div className="mb-12">
                 <h2 className="text-4xl font-serif font-bold">Edit Profile 编辑个人资料</h2>
