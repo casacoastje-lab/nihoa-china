@@ -89,11 +89,11 @@ export default function Auth() {
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-12 bg-card/50 p-2 rounded-full border border-border h-16">
-            <TabsTrigger value="login" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-lg transition-all">
+          <TabsList className="grid w-full grid-cols-2 mb-12 bg-card/50 p-2 rounded-full border border-border h-20">
+            <TabsTrigger value="login" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-xl transition-all h-full">
               Login 登录
             </TabsTrigger>
-            <TabsTrigger value="register" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-lg transition-all">
+            <TabsTrigger value="register" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-xl transition-all h-full">
               Register 注册
             </TabsTrigger>
           </TabsList>
