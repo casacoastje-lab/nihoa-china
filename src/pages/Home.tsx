@@ -112,7 +112,7 @@ export default function Home() {
               className={buttonVariants({ 
                 variant: "outline",
                 size: "lg", 
-                className: "border-white/30 text-black hover:text-white hover:bg-white/10 backdrop-blur-md rounded-full px-12 py-8 text-xl font-serif italic" 
+                className: "border-white/30 text-white hover:bg-white/10 backdrop-blur-md rounded-full px-12 py-8 text-xl font-serif italic" 
               })}
             >
               Explore Map 探索地图
@@ -144,7 +144,7 @@ export default function Home() {
                 <div className="h-px w-12 bg-primary" />
                 <span className="font-serif italic text-xl font-bold uppercase tracking-widest">Our Philosophy 我们的哲学</span>
               </div>
-              <h2 className="text-6xl font-serif font-bold tracking-tight leading-tight">
+              <h2 className="text-6xl font-serif font-bold tracking-tight leading-tight text-foreground">
                 Infrastructure for <br />
                 <span className="italic text-primary">Cultural Continuity</span>
               </h2>
@@ -177,9 +177,9 @@ export default function Home() {
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="absolute -bottom-10 -left-10 bg-card p-8 rounded-3xl shadow-xl max-w-xs border border-border">
+              <div className="absolute -bottom-10 -left-10 bg-black p-8 rounded-3xl shadow-xl max-w-xs border border-border">
                 <Quote className="text-primary h-8 w-8 mb-4" />
-                <p className="font-serif italic text-lg leading-relaxed">
+                <p className="font-serif italic text-lg leading-relaxed text-white">
                   "The brush mirrors the mind; the scroll mirrors the universe."
                 </p>
               </div>
@@ -189,10 +189,10 @@ export default function Home() {
       </section>
 
       {/* Bento Grid Features */}
-      <section className="py-32 bg-muted/30">
+      <section className="py-32 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20 space-y-4">
-            <h2 className="text-5xl font-serif font-bold tracking-tight">Curated Experiences 策展体验</h2>
+            <h2 className="text-5xl font-serif font-bold tracking-tight text-foreground">Curated Experiences 策展体验</h2>
             <p className="text-xl text-muted-foreground font-serif italic">Explore the many facets of the Middle Kingdom.</p>
           </div>
 
@@ -211,7 +211,7 @@ export default function Home() {
                     <div className={`p-5 rounded-2xl ${feature.color} text-white w-fit mb-8 group-hover:scale-110 transition-transform duration-500`}>
                       <feature.icon size={32} />
                     </div>
-                    <h3 className="text-2xl font-serif font-bold mb-2">{feature.title}</h3>
+                    <h3 className="text-2xl font-serif font-bold mb-2 text-foreground">{feature.title}</h3>
                     <p className="text-xs text-primary font-bold uppercase tracking-[0.2em] mb-6">{feature.zh}</p>
                     <p className="text-muted-foreground font-serif italic leading-relaxed flex-grow">
                       {feature.desc}
@@ -252,7 +252,7 @@ export default function Home() {
               to="/auth" 
               className={buttonVariants({ 
                 size: "lg", 
-                className: "bg-white text-primary hover:bg-white/90 rounded-full px-16 py-8 text-2xl font-serif italic shadow-2xl" 
+                className: "bg-black text-white hover:bg-white hover:text-black rounded-full px-16 py-8 text-2xl font-serif italic shadow-2xl" 
               })}
             >
               Join the Community 加入社区

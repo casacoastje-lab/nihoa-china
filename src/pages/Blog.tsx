@@ -86,12 +86,12 @@ export default function Blog() {
         </div>
       </motion.div>
 
-      <div className="flex gap-3 overflow-x-auto pb-8 mb-16 no-scrollbar border-b border-border">
+      <div className="flex gap-3 overflow-x-auto pb-0 mb-16 no-scrollbar border-b border-border pl-[3px] pr-[3px]">
         {categories.map(cat => (
           <Button
             key={cat}
             variant={categoryFilter === cat.toLowerCase() ? "default" : "outline"}
-            className={`rounded-full px-8 py-6 text-lg font-serif italic transition-all ${categoryFilter === cat.toLowerCase() ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'border-border hover:border-primary hover:text-primary'}`}
+            className={`rounded-full px-8 py-6 text-lg font-serif italic transition-all ${categoryFilter === cat.toLowerCase() ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'border-border bg-card text-foreground hover:border-primary hover:text-primary'}`}
             onClick={() => setSearchParams({ category: cat.toLowerCase() })}
           >
             {cat}

@@ -8,16 +8,14 @@ import {
   DropdownMenuTrigger 
 } from './ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Map, BookOpen, Image as ImageIcon, Gamepad2, User, LogOut, Settings, Menu, Sun, Moon } from 'lucide-react';
+import { Map, BookOpen, Image as ImageIcon, Gamepad2, User, LogOut, Settings, Menu } from 'lucide-react';
 import { useState } from 'react';
-import { useTheme } from 'next-themes';
 import { motion } from 'motion/react';
 
 export default function Navbar() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
 
   const handleSignOut = async () => {
     await signOut();
@@ -32,7 +30,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <div className="flex items-center">
@@ -66,17 +64,6 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-6">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="rounded-full hover:bg-muted"
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
-
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger render={
