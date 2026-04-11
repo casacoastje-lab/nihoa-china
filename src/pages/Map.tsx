@@ -4,14 +4,50 @@ import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Badge } from '@/src/components/ui/badge';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
-import { MapPin, Search, Navigation, Info, Layers, Filter, Globe } from 'lucide-react';
-import { motion } from 'motion/react';
+import { MapPin, Search, Navigation, Info, Layers, Filter, Globe, Star } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import AMapLoader from '@amap/amap-jsapi-loader';
 import { supabase } from '@/src/lib/supabase';
 import { Landmark } from '@/src/types';
 import { toast } from 'sonner';
 
 const categories = ['All', 'History', 'Landmark', 'Nature', 'Art', 'Culture', 'Food', 'Architecture'];
+
+const sampleLandmarks: Landmark[] = [
+  {
+    id: 'sample-1',
+    name: 'The Forbidden City',
+    name_zh: '故宫博物院',
+    province: 'Beijing',
+    description: 'The imperial palace of the Ming and Qing Dynasties, a masterpiece of Chinese architecture.',
+    category: 'History',
+    lat: 39.9163,
+    lng: 116.3972,
+    image_url: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&q=80&w=1000'
+  },
+  {
+    id: 'sample-2',
+    name: 'The Great Wall',
+    name_zh: '万里长城',
+    province: 'Beijing',
+    description: 'A series of fortifications built across the historical northern borders of ancient Chinese states.',
+    category: 'Landmark',
+    lat: 40.4319,
+    lng: 116.5704,
+    image_url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=1000'
+  },
+  {
+    id: 'sample-3',
+    name: 'West Lake',
+    name_zh: '杭州西湖',
+    province: 'Zhejiang',
+    description: 'A freshwater lake in Hangzhou, famous for its scenic beauty and cultural significance.',
+    category: 'Nature',
+    lat: 30.2422,
+    lng: 120.1492,
+    image_url: 'https://images.unsplash.com/photo-1529921879218-f99546d03a9d?auto=format&fit=crop&q=80&w=1000'
+  }
+];
 
 export default function MapPage() {
   const [landmarks, setLandmarks] = useState<Landmark[]>([]);
@@ -33,10 +69,11 @@ export default function MapPage() {
           .order('name', { ascending: true });
         
         if (error) throw error;
-        setLandmarks(data || []);
+        setLandmarks(data && data.length > 0 ? data : sampleLandmarks);
       } catch (err: any) {
         console.error('Error fetching landmarks:', err);
-        toast.error('Failed to load landmarks from database');
+        setLandmarks(sampleLandmarks);
+        toast.error('Using sample data: Database connection failed');
       }
     };
 
@@ -59,8 +96,6 @@ export default function MapPage() {
   };
 
   useEffect(() => {
-    if (!landmarks.length) return;
-
     // Amap Security Config
     (window as any)._AMapSecurityConfig = {
       securityJsCode: import.meta.env.VITE_AMAP_SECRET || '850a1836abcd4a800204300fbdb2f417',
@@ -97,32 +132,34 @@ export default function MapPage() {
         setSelectedLandmark(null);
       });
 
-      // Clear old markers
-      markersRef.current.forEach(m => m.marker.setMap(null));
-      markersRef.current = [];
+      // Add markers if landmarks exist
+      if (landmarks.length > 0) {
+        // Clear old markers
+        markersRef.current.forEach(m => m.marker.setMap(null));
+        markersRef.current = [];
 
-      // Add markers
-      landmarks.forEach(landmark => {
-        const marker = new AMap.Marker({
-          position: [landmark.lng, landmark.lat],
-          title: landmark.name,
-          map: map,
+        landmarks.forEach(landmark => {
+          const marker = new AMap.Marker({
+            position: [landmark.lng, landmark.lat],
+            title: landmark.name,
+            map: map,
+          });
+
+          marker.on('click', () => {
+            setSelectedLandmark(landmark);
+          });
+
+          marker.on('mouseover', () => {
+            handleMouseEnter(landmark);
+          });
+
+          marker.on('mouseout', () => {
+            handleMouseLeave();
+          });
+
+          markersRef.current.push({ id: landmark.id, marker });
         });
-
-        marker.on('click', () => {
-          setSelectedLandmark(landmark);
-        });
-
-        marker.on('mouseover', () => {
-          handleMouseEnter(landmark);
-        });
-
-        marker.on('mouseout', () => {
-          handleMouseLeave();
-        });
-
-        markersRef.current.push({ id: landmark.id, marker });
-      });
+      }
     }).catch(e => {
       console.error('AMap Loader Error:', e);
     });
@@ -155,27 +192,40 @@ export default function MapPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-64px)] flex flex-col md:flex-row overflow-hidden">
+    <div className="h-[calc(100vh-64px)] flex flex-col md:flex-row overflow-hidden bg-background">
       {/* Sidebar */}
-      <div className="w-full md:w-96 bg-white border-r border-stone-200 flex flex-col z-10">
-        <div className="p-6 border-b border-stone-100">
-          <h1 className="text-2xl font-bold tracking-tighter mb-4">MAP <span className="text-red-600">NAVIGATOR</span></h1>
+      <motion.div 
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        className="w-full md:w-[380px] bg-card border-r border-border flex flex-col z-10 shadow-2xl"
+      >
+        <div className="p-3 space-y-3 border-b border-border">
+          <div className="space-y-0.5">
+            <div className="inline-flex items-center space-x-2 text-primary">
+              <div className="h-px w-3 bg-primary" />
+              <span className="font-serif italic text-[10px] font-bold uppercase tracking-widest">Cartography 绘图</span>
+            </div>
+            <h1 className="text-xl font-serif font-bold tracking-tight leading-[0.9]">
+              MAP <span className="text-primary italic">NAVIGATOR</span>
+            </h1>
+          </div>
+          
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 h-4 w-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground h-3 w-3" />
             <Input 
               placeholder="Search landmarks..." 
-              className="pl-10 rounded-xl bg-stone-50 border-none"
+              className="pl-7 h-7 rounded-full bg-muted border-none font-serif italic text-[10px]"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex gap-2 overflow-x-auto mt-4 pb-2 custom-scrollbar">
+          
+          <div className="flex gap-1 overflow-x-auto pb-1 no-scrollbar">
             {categories.map(cat => (
               <Button
                 key={cat}
                 variant={activeCategory === cat ? "default" : "outline"}
-                size="sm"
-                className={`rounded-full text-[10px] h-7 px-3 uppercase tracking-widest font-bold ${activeCategory === cat ? 'bg-red-600 hover:bg-red-700' : ''}`}
+                className={`rounded-full px-2 py-0.5 text-[9px] font-serif italic transition-all h-5 ${activeCategory === cat ? 'bg-primary text-white shadow-md shadow-primary/20' : 'border-border hover:border-primary hover:text-primary'}`}
                 onClick={() => setActiveCategory(cat)}
               >
                 {cat}
@@ -185,99 +235,119 @@ export default function MapPage() {
         </div>
 
         <ScrollArea className="flex-grow min-h-0">
-          <div className="p-4 space-y-3">
-            {filteredLandmarks.map(l => (
+          <div className="p-4 space-y-4">
+            {filteredLandmarks.length > 0 ? filteredLandmarks.map((l, idx) => (
               <motion.div
                 key={l.id}
-                whileHover={{ x: 4 }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                whileHover={{ x: 5 }}
                 onMouseEnter={() => handleMouseEnter(l)}
                 onMouseLeave={handleMouseLeave}
-                className={`p-4 rounded-2xl cursor-pointer transition-all border ${selectedLandmark?.id === l.id ? 'bg-red-50 border-red-100' : 'bg-white border-stone-100 hover:bg-stone-50'}`}
+                className={`p-3 rounded-[1.5rem] cursor-pointer transition-all border-2 ${selectedLandmark?.id === l.id ? 'bg-primary/5 border-primary shadow-lg shadow-primary/5' : 'bg-card border-border hover:border-primary/30'}`}
               >
-                <div className="flex items-start space-x-4">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0">
+                <div className="flex items-start space-x-3">
+                  <div className="w-14 h-14 rounded-[1rem] overflow-hidden shrink-0 shadow-md">
                     <img src={l.image_url} alt={l.name} className="w-full h-full object-cover" />
                   </div>
-                  <div className="flex-grow">
+                  <div className="flex-grow space-y-0.5">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-sm">{l.name}</h3>
-                      <span className="text-[10px] text-stone-400 font-medium">{l.province}</span>
+                      <h3 className="font-serif font-bold text-sm leading-tight">{l.name}</h3>
+                      <span className="text-[9px] font-serif italic text-muted-foreground">{l.province}</span>
                     </div>
-                    <p className="text-[10px] text-red-600 font-bold mb-1">{l.name_zh}</p>
-                    <p className="text-xs text-stone-500 line-clamp-1">{l.description}</p>
-                    <Badge variant="outline" className="text-[9px] mt-2 uppercase tracking-widest">{l.category}</Badge>
+                    <p className="text-[10px] text-primary font-serif font-bold italic">{l.name_zh}</p>
+                    <p className="text-[10px] text-muted-foreground font-serif italic line-clamp-1 leading-relaxed">{l.description}</p>
+                    <Badge variant="outline" className="text-[7px] mt-0.5 uppercase tracking-[0.1em] font-bold border-primary/20 text-primary h-3.5">
+                      {l.category}
+                    </Badge>
                   </div>
                 </div>
               </motion.div>
-            ))}
+            )) : (
+              <div className="py-10 text-center space-y-4">
+                <MapPin className="mx-auto h-8 w-8 text-muted-foreground/30" />
+                <p className="text-sm font-serif italic text-muted-foreground">No landmarks found in this region.</p>
+              </div>
+            )}
           </div>
         </ScrollArea>
 
-        <div className="p-6 border-t border-stone-100 bg-stone-50">
+        <div className="p-4 border-t border-border bg-muted/30">
           <Button 
-            className="w-full bg-red-600 hover:bg-red-700 rounded-xl"
+            className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-full h-10 text-base font-serif italic shadow-md"
             onClick={handleOpenInAmap}
           >
-            <Navigation className="mr-2 h-4 w-4" /> Open in Amap
+            <Navigation className="mr-2 h-4 w-4 text-primary" /> Open in Amap 开启导航
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Map Content */}
-      <div className="flex-grow relative bg-stone-100">
+      <div className="flex-grow relative bg-muted">
         <div ref={containerRef} className="absolute inset-0 w-full h-full" />
         
         {!mapLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center z-20 bg-stone-100/80 backdrop-blur-sm">
-            <div className="text-center space-y-4">
-              <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-stone-500 font-medium">Loading Interactive Map...</p>
+          <div className="absolute inset-0 flex items-center justify-center z-20 bg-background/80 backdrop-blur-md">
+            <div className="text-center space-y-6">
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+              <p className="text-2xl font-serif italic text-muted-foreground">Loading Interactive Map... 载入地图</p>
             </div>
           </div>
         )}
 
         {/* Selected Landmark Overlay */}
-        {selectedLandmark && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            key={selectedLandmark.id}
-            onMouseEnter={handlePopupMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            className="absolute bottom-8 left-8 right-8 md:right-auto md:w-96 z-10"
-          >
-            <Card className="rounded-[2.5rem] overflow-hidden shadow-2xl border-none">
-              <div className="relative h-48">
-                <img src={selectedLandmark.image_url} alt={selectedLandmark.name} className="w-full h-full object-cover" />
-                <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full bg-white/80 backdrop-blur-sm">
-                  <Info size={18} />
-                </Button>
-              </div>
-              <CardContent className="p-8">
-                <div className="flex items-center justify-between mb-3">
-                  <Badge className="bg-red-600">{selectedLandmark.category}</Badge>
-                  <span className="text-xs font-bold text-stone-400 flex items-center">
-                    <Globe className="mr-1 h-3 w-3" /> {selectedLandmark.province}
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold mb-1">{selectedLandmark.name}</h3>
-                <p className="text-red-600 font-bold text-sm mb-3">{selectedLandmark.name_zh}</p>
-                <p className="text-stone-500 text-sm leading-relaxed mb-6">
-                  {selectedLandmark.description}
-                </p>
-                <div className="flex gap-3">
-                  <Button 
-                    className="flex-grow bg-stone-900 hover:bg-black rounded-full"
-                    onClick={handleOpenInAmap}
-                  >
-                    Get Directions
+        <AnimatePresence>
+          {selectedLandmark && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              key={selectedLandmark.id}
+              onMouseEnter={handlePopupMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="absolute bottom-12 left-12 right-12 md:right-auto md:w-[450px] z-10"
+            >
+              <Card className="rounded-[3.5rem] overflow-hidden shadow-2xl border-none bg-card">
+                <div className="relative h-64 overflow-hidden group">
+                  <img src={selectedLandmark.image_url} alt={selectedLandmark.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
+                  <Button size="icon" variant="secondary" className="absolute top-6 right-6 rounded-full bg-background/80 backdrop-blur-md hover:bg-background">
+                    <Info size={20} className="text-primary" />
                   </Button>
-                  <Button variant="outline" className="rounded-full border-stone-200">Save</Button>
+                  <div className="absolute bottom-6 left-8">
+                    <Badge className="bg-primary text-white border-none font-serif italic px-4 py-1">{selectedLandmark.category}</Badge>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+                <CardContent className="p-10 space-y-6">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-4xl font-serif font-bold tracking-tight">{selectedLandmark.name}</h3>
+                      <span className="text-sm font-serif italic text-muted-foreground flex items-center">
+                        <Globe className="mr-2 h-4 w-4 text-primary" /> {selectedLandmark.province}
+                      </span>
+                    </div>
+                    <p className="text-2xl text-primary font-serif font-bold italic">{selectedLandmark.name_zh}</p>
+                  </div>
+                  <p className="text-lg text-muted-foreground font-serif italic leading-relaxed">
+                    {selectedLandmark.description}
+                  </p>
+                  <div className="flex gap-4 pt-4">
+                    <Button 
+                      className="flex-grow bg-foreground text-background hover:bg-foreground/90 rounded-full h-16 text-xl font-serif italic shadow-xl"
+                      onClick={handleOpenInAmap}
+                    >
+                      Get Directions 路线
+                    </Button>
+                    <Button variant="outline" className="rounded-full h-16 w-16 p-0 border-border hover:border-primary hover:text-primary transition-all">
+                      <Star className="h-6 w-6" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -9,7 +9,8 @@ import { Textarea } from '@/src/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { toast } from 'sonner';
-import { Image as ImageIcon, FileText, X, Upload, Save, ArrowLeft } from 'lucide-react';
+import { Image as ImageIcon, FileText, X, Upload, Save, ArrowLeft, Sparkles } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function BlogEdit() {
   const { id } = useParams();
@@ -126,53 +127,78 @@ export default function BlogEdit() {
     setLoading(false);
   };
 
-  if (fetching) return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  if (fetching) return (
+    <div className="flex flex-col items-center justify-center h-screen space-y-6">
+      <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="font-serif italic text-2xl animate-pulse">Preparing the parchment...</p>
+    </div>
+  );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex items-center justify-between mb-8">
-        <Button variant="ghost" onClick={() => navigate(-1)}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back
-        </Button>
-        <h1 className="text-3xl font-bold tracking-tight">{id ? 'Edit Story' : 'New Story'}</h1>
-        <div className="flex items-center space-x-2">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8"
+      >
+        <div className="flex flex-col items-start space-y-4">
+          <Button variant="ghost" onClick={() => navigate(-1)} className="group font-serif italic text-lg text-muted-foreground hover:text-primary">
+            <ArrowLeft className="mr-3 h-5 w-5 group-hover:-translate-x-2 transition-transform" /> Back to Dashboard
+          </Button>
+          <div className="flex items-center space-x-4 text-primary">
+            <Sparkles className="h-6 w-6" />
+            <span className="font-serif italic text-xl font-bold uppercase tracking-widest">Scribe's Chamber 书房</span>
+          </div>
+          <h1 className="text-6xl font-serif font-bold tracking-tight">{id ? 'Refine Story' : 'Inscribe New Story'}</h1>
+        </div>
+        
+        <div className="flex items-center space-x-4 bg-card p-4 rounded-full border border-border shadow-xl">
           <Select value={status} onValueChange={(v: any) => setStatus(v)}>
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[140px] h-12 rounded-full border-none bg-muted/50 font-serif italic">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="published">Published</SelectItem>
+            <SelectContent className="rounded-2xl border-border bg-popover shadow-xl">
+              <SelectItem value="draft" className="font-serif italic">Draft 草稿</SelectItem>
+              <SelectItem value="published" className="font-serif italic">Published 发布</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={handleSubmit} className="bg-red-600 hover:bg-red-700" disabled={loading}>
-            <Save className="mr-2 h-4 w-4" /> {id ? 'Update' : 'Publish'}
+          <Button onClick={handleSubmit} className="bg-primary hover:bg-primary/90 text-white rounded-full h-12 px-10 text-lg font-serif italic shadow-lg shadow-primary/20 group" disabled={loading}>
+            {loading ? 'Inscribing...' : (
+              <>
+                <Save className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" /> {id ? 'Update' : 'Publish'}
+              </>
+            )}
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="rounded-[2rem] border-stone-100 shadow-sm">
-            <CardContent className="p-8 space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="title" className="text-lg font-bold">Story Title</Label>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="lg:col-span-2 space-y-8"
+        >
+          <Card className="rounded-[3rem] border-none shadow-2xl bg-card overflow-hidden">
+            <CardContent className="p-12 space-y-10">
+              <div className="space-y-4">
+                <Label htmlFor="title" className="text-2xl font-serif font-bold italic ml-4">The Title 标题</Label>
                 <Input 
                   id="title" 
-                  placeholder="Enter a catchy title..." 
-                  className="text-2xl font-bold h-14 border-none bg-stone-50 rounded-2xl focus-visible:ring-red-600"
+                  placeholder="Enter a title that resonates..." 
+                  className="text-4xl font-serif font-bold h-20 border-none bg-muted/30 rounded-3xl px-8 focus-visible:ring-primary focus-visible:bg-muted/50 transition-all"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="content" className="text-lg font-bold">Content (Markdown Supported)</Label>
+              <div className="space-y-4">
+                <Label htmlFor="content" className="text-2xl font-serif font-bold italic ml-4">The Narrative 叙述</Label>
                 <Textarea 
                   id="content" 
-                  placeholder="Tell your story..." 
-                  className="min-h-[500px] border-none bg-stone-50 rounded-2xl p-6 focus-visible:ring-red-600 text-lg leading-relaxed"
+                  placeholder="Unfold your story here... (Markdown is supported)" 
+                  className="min-h-[600px] border-none bg-muted/30 rounded-[2.5rem] p-10 focus-visible:ring-primary focus-visible:bg-muted/50 transition-all text-xl font-serif italic leading-relaxed"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   required
@@ -180,46 +206,57 @@ export default function BlogEdit() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
 
-        <div className="space-y-6">
-          <Card className="rounded-[2rem] border-stone-100 shadow-sm overflow-hidden">
-            <CardHeader className="bg-stone-50 border-b border-stone-100">
-              <CardTitle className="text-sm uppercase tracking-widest text-stone-500">Settings</CardTitle>
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="space-y-8"
+        >
+          <Card className="rounded-[3rem] border-none shadow-2xl bg-card overflow-hidden">
+            <CardHeader className="bg-muted/30 p-8 border-b border-border">
+              <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground font-serif font-bold">Scroll Settings 设置</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="space-y-2">
-                <Label>Category</Label>
+            <CardContent className="p-10 space-y-10">
+              <div className="space-y-4">
+                <Label className="text-lg font-serif font-bold italic ml-2">Category 类别</Label>
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-14 rounded-2xl border-border bg-muted/30 font-serif italic text-lg px-6">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="food">Food</SelectItem>
-                    <SelectItem value="art">Art</SelectItem>
-                    <SelectItem value="history">History</SelectItem>
-                    <SelectItem value="landmark">Landmark</SelectItem>
-                    <SelectItem value="culture">Culture</SelectItem>
+                  <SelectContent className="rounded-2xl border-border bg-popover shadow-xl">
+                    <SelectItem value="food" className="font-serif italic py-3">Food 美食</SelectItem>
+                    <SelectItem value="art" className="font-serif italic py-3">Art 艺术</SelectItem>
+                    <SelectItem value="history" className="font-serif italic py-3">History 历史</SelectItem>
+                    <SelectItem value="landmark" className="font-serif italic py-3">Landmark 地标</SelectItem>
+                    <SelectItem value="culture" className="font-serif italic py-3">Culture 文化</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-4">
-                <Label>Thumbnail Image</Label>
+              <div className="space-y-6">
+                <Label className="text-lg font-serif font-bold italic ml-2">Visual Essence 视觉</Label>
                 {thumbnailUrl ? (
-                  <div className="relative rounded-2xl overflow-hidden aspect-video group">
-                    <img src={thumbnailUrl} alt="Thumbnail" className="w-full h-full object-cover" />
-                    <button 
-                      onClick={() => setThumbnailUrl('')}
-                      className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X size={16} />
-                    </button>
+                  <div className="relative rounded-[2rem] overflow-hidden aspect-[4/3] group shadow-lg">
+                    <img src={thumbnailUrl} alt="Thumbnail" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Button 
+                        variant="destructive" 
+                        size="icon"
+                        onClick={() => setThumbnailUrl('')}
+                        className="rounded-full h-12 w-12"
+                      >
+                        <X size={24} />
+                      </Button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-stone-200 rounded-2xl aspect-video flex flex-col items-center justify-center text-stone-400 hover:border-red-600 hover:text-red-600 transition-colors cursor-pointer relative">
-                    <ImageIcon size={32} className="mb-2" />
-                    <span className="text-xs font-medium">Upload Thumbnail</span>
+                  <div className="border-2 border-dashed border-border rounded-[2rem] aspect-[4/3] flex flex-col items-center justify-center text-muted-foreground hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer relative group">
+                    <div className="bg-muted/50 p-6 rounded-full mb-4 group-hover:scale-110 transition-transform">
+                      <ImageIcon size={40} />
+                    </div>
+                    <span className="text-lg font-serif italic">Upload Thumbnail</span>
                     <input 
                       type="file" 
                       accept="image/*" 
@@ -230,24 +267,32 @@ export default function BlogEdit() {
                 )}
               </div>
 
-              <div className="space-y-4">
-                <Label>Attachments (PDF, Docs)</Label>
-                <div className="space-y-2">
+              <div className="space-y-6">
+                <Label className="text-lg font-serif font-bold italic ml-2">Supplementary Scrolls 附件</Label>
+                <div className="space-y-3">
                   {attachments.map((url, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-100">
-                      <div className="flex items-center space-x-2 truncate">
-                        <FileText size={16} className="text-stone-400 shrink-0" />
-                        <span className="text-xs truncate">{url.split('/').pop()}</span>
+                    <motion.div 
+                      key={i} 
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border group"
+                    >
+                      <div className="flex items-center space-x-3 truncate">
+                        <FileText size={20} className="text-primary shrink-0" />
+                        <span className="text-sm font-serif italic truncate">{url.split('/').pop()}</span>
                       </div>
-                      <button onClick={() => setAttachments(attachments.filter((_, idx) => idx !== i))}>
-                        <X size={14} className="text-stone-400 hover:text-red-600" />
+                      <button 
+                        onClick={() => setAttachments(attachments.filter((_, idx) => idx !== i))}
+                        className="p-2 hover:bg-destructive/10 hover:text-destructive rounded-full transition-colors"
+                      >
+                        <X size={18} />
                       </button>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
                 <div className="relative">
-                  <Button variant="outline" className="w-full rounded-xl border-stone-200">
-                    <Upload className="mr-2 h-4 w-4" /> Add Attachment
+                  <Button variant="outline" className="w-full rounded-2xl h-14 border-border font-serif italic text-lg hover:border-primary hover:text-primary transition-all">
+                    <Upload className="mr-3 h-5 w-5" /> Add Attachment
                   </Button>
                   <input 
                     type="file" 
@@ -259,7 +304,7 @@ export default function BlogEdit() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

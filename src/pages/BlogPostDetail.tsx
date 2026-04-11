@@ -7,9 +7,10 @@ import { Button, buttonVariants } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Textarea } from '@/src/components/ui/textarea';
 import { Badge } from '@/src/components/ui/badge';
-import { Calendar, User as UserIcon, MessageSquare, Share2, ArrowLeft, Flag } from 'lucide-react';
+import { Calendar, User as UserIcon, MessageSquare, Share2, ArrowLeft, Flag, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function BlogPostDetail() {
   const { id } = useParams();
@@ -89,150 +90,221 @@ export default function BlogPostDetail() {
     toast.info('Report submitted to admin.');
   };
 
-  if (loading) return <div className="flex items-center justify-center h-screen">Loading story...</div>;
-  if (!post) return <div className="text-center py-24">Post not found</div>;
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center h-screen space-y-6">
+      <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="font-serif italic text-2xl animate-pulse">Unrolling the scroll...</p>
+    </div>
+  );
+
+  if (!post) return (
+    <div className="text-center py-48 space-y-8">
+      <h2 className="text-6xl font-serif font-bold italic">Story Lost in Time</h2>
+      <Link to="/blog" className={buttonVariants({ variant: "outline", className: "rounded-full px-12 h-14 text-lg font-serif italic" })}>
+        Return to Archive
+      </Link>
+    </div>
+  );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link to="/blog" className="inline-flex items-center text-stone-500 hover:text-stone-900 mb-8 transition-colors">
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Stories
-      </Link>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="mb-12"
+      >
+        <Link to="/blog" className="group inline-flex items-center text-muted-foreground hover:text-primary transition-colors font-serif italic text-xl">
+          <ArrowLeft className="mr-3 h-5 w-5 group-hover:-translate-x-2 transition-transform" /> Back to Archive
+        </Link>
+      </motion.div>
 
-      <article className="space-y-8">
-        <div className="space-y-6">
-          <Badge className="bg-red-100 text-red-600 hover:bg-red-100 border-none uppercase text-xs tracking-widest font-bold px-4 py-1">
-            {post.category}
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-tight">
+      <article className="space-y-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-8 text-center"
+        >
+          <div className="inline-flex items-center space-x-4 text-primary">
+            <Sparkles className="h-5 w-5" />
+            <span className="font-serif italic text-lg font-bold uppercase tracking-widest">{post.category}</span>
+          </div>
+          <h1 className="text-7xl md:text-8xl font-serif font-bold tracking-tight leading-[0.85] max-w-4xl mx-auto">
             {post.title}
           </h1>
           
-          <div className="flex flex-wrap items-center gap-6 py-6 border-y border-stone-100">
-            <div className="flex items-center space-x-3">
-              <Avatar className="h-10 w-10">
+          <div className="flex flex-wrap items-center justify-center gap-10 py-10 border-y border-border">
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-14 w-14 border-2 border-primary/20">
                 <AvatarImage src={post.author?.avatar_url} />
-                <AvatarFallback>{post.author?.full_name?.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="bg-muted text-primary font-serif">{post.author?.full_name?.charAt(0)}</AvatarFallback>
               </Avatar>
-              <div>
-                <p className="text-sm font-bold">{post.author?.full_name}</p>
-                <p className="text-xs text-stone-500">Author</p>
+              <div className="text-left">
+                <p className="text-xl font-serif font-bold">{post.author?.full_name}</p>
+                <p className="text-sm font-serif italic text-muted-foreground uppercase tracking-widest">Scribe</p>
               </div>
             </div>
-            <div className="flex items-center text-sm text-stone-500">
-              <Calendar className="mr-2 h-4 w-4" />
+            <div className="flex items-center text-lg font-serif italic text-muted-foreground">
+              <Calendar className="mr-3 h-5 w-5 text-primary" />
               {new Date(post.created_at).toLocaleDateString(undefined, { dateStyle: 'long' })}
             </div>
-            <div className="flex items-center text-sm text-stone-500">
-              <MessageSquare className="mr-2 h-4 w-4" />
-              {comments.length} Comments
+            <div className="flex items-center text-lg font-serif italic text-muted-foreground">
+              <MessageSquare className="mr-3 h-5 w-5 text-primary" />
+              {comments.length} Reflections
             </div>
-            <div className="ml-auto flex items-center space-x-2">
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Share2 className="h-4 w-4" />
+            <div className="flex items-center space-x-4">
+              <Button variant="outline" size="icon" className="rounded-full h-12 w-12 border-border hover:border-primary hover:text-primary transition-all">
+                <Share2 className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="rounded-full text-stone-400 hover:text-red-600" onClick={handleReport}>
-                <Flag className="h-4 w-4" />
+              <Button variant="outline" size="icon" className="rounded-full h-12 w-12 border-border hover:text-destructive transition-all" onClick={handleReport}>
+                <Flag className="h-5 w-5" />
               </Button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+          className="relative aspect-[21/9] rounded-[4rem] overflow-hidden shadow-2xl"
+        >
           <img 
-            src={post.thumbnail_url || `https://picsum.photos/seed/${post.id}/1200/800`} 
+            src={post.thumbnail_url || `https://picsum.photos/seed/${post.id}/1600/900`} 
             alt={post.title} 
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        </motion.div>
 
-        <div className="prose prose-stone prose-lg max-w-none prose-headings:tracking-tighter prose-headings:font-bold prose-p:leading-relaxed prose-a:text-red-600">
-          <ReactMarkdown>{post.content}</ReactMarkdown>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="prose prose-stone dark:prose-invert prose-2xl max-w-none font-serif italic leading-relaxed prose-headings:font-bold prose-headings:not-italic prose-headings:tracking-tight prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-blockquote:border-primary prose-blockquote:bg-primary/5 prose-blockquote:p-8 prose-blockquote:rounded-3xl">
+            <ReactMarkdown>{post.content}</ReactMarkdown>
+          </div>
+        </motion.div>
 
         {post.attachments && post.attachments.length > 0 && (
-          <div className="bg-stone-100 p-8 rounded-[2rem] space-y-4">
-            <h3 className="font-bold text-lg">Attachments</h3>
-            <div className="flex flex-wrap gap-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="max-w-3xl mx-auto bg-card p-12 rounded-[3rem] border border-border shadow-xl space-y-8"
+          >
+            <h3 className="font-serif font-bold text-3xl italic flex items-center">
+              <Sparkles className="mr-4 h-6 w-6 text-primary" /> Supplementary Scrolls
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {post.attachments.map((url, i) => (
                 <a 
                   key={i} 
                   href={url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="bg-white px-4 py-2 rounded-full text-sm font-medium border border-stone-200 hover:border-red-600 transition-colors"
+                  className="flex items-center justify-between bg-muted/50 p-6 rounded-2xl border border-border hover:border-primary hover:bg-primary/5 transition-all group"
                 >
-                  Document {i + 1}
+                  <span className="font-serif italic text-lg truncate">Document {i + 1}</span>
+                  <ArrowLeft className="h-5 w-5 text-primary rotate-180 group-hover:translate-x-2 transition-transform" />
                 </a>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
       </article>
 
       {/* Comments Section */}
-      <section className="mt-24 space-y-12">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Comments ({comments.length})</h2>
+      <section className="mt-40 max-w-3xl mx-auto space-y-16">
+        <div className="flex items-center space-x-6">
+          <div className="h-px flex-grow bg-border" />
+          <h2 className="text-5xl font-serif font-bold italic whitespace-nowrap">Reflections ({comments.length})</h2>
+          <div className="h-px flex-grow bg-border" />
         </div>
 
         {user ? (
-          <form onSubmit={handleCommentSubmit} className="space-y-4 bg-white p-8 rounded-[2rem] border border-stone-100 shadow-sm">
-            <div className="flex items-start space-x-4">
-              <Avatar className="h-10 w-10">
+          <motion.form 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            onSubmit={handleCommentSubmit} 
+            className="space-y-6 bg-card p-12 rounded-[3rem] border border-border shadow-xl"
+          >
+            <div className="flex items-start space-x-6">
+              <Avatar className="h-14 w-14 border-2 border-primary/20">
                 <AvatarImage src={profile?.avatar_url} />
-                <AvatarFallback>{profile?.full_name?.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="bg-muted text-primary font-serif">{profile?.full_name?.charAt(0)}</AvatarFallback>
               </Avatar>
-              <div className="flex-grow space-y-4">
+              <div className="flex-grow space-y-6">
                 <Textarea 
-                  placeholder="Share your thoughts..." 
-                  className="min-h-[120px] rounded-2xl border-stone-200 focus:ring-red-600"
+                  placeholder="Inscribe your thoughts..." 
+                  className="min-h-[180px] rounded-[2rem] bg-muted/50 border-border font-serif italic text-xl p-8 focus:ring-primary focus:border-primary"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   required
                 />
-                <Button type="submit" className="bg-red-600 hover:bg-red-700 rounded-full px-8" disabled={submitting}>
-                  {submitting ? 'Posting...' : 'Post Comment'}
+                <Button type="submit" className="bg-primary hover:bg-primary/90 text-white rounded-full h-16 px-12 text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={submitting}>
+                  {submitting ? 'Inscribing...' : (
+                    <>
+                      Post Reflection <MessageSquare className="ml-3 h-5 w-5 group-hover:scale-110 transition-transform" />
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
-          </form>
+          </motion.form>
         ) : (
-          <div className="bg-stone-100 p-8 rounded-[2rem] text-center">
-            <p className="text-stone-600 mb-4">Please login to join the conversation.</p>
-            <Link to="/auth" className={buttonVariants({ className: "bg-red-600 hover:bg-red-700 rounded-full" })}>
+          <div className="bg-card p-16 rounded-[4rem] text-center border border-border shadow-xl space-y-8">
+            <p className="text-2xl font-serif italic text-muted-foreground">Join the conversation to share your reflections.</p>
+            <Link to="/auth" className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-white rounded-full h-16 px-12 text-xl font-serif italic shadow-xl shadow-primary/20" })}>
               Login to Comment
             </Link>
           </div>
         )}
 
-        <div className="space-y-8">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.id} className="flex space-x-4">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={comment.user?.avatar_url} />
-                  <AvatarFallback>{comment.user?.full_name?.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="flex-grow">
-                  <div className="bg-stone-50 p-6 rounded-3xl rounded-tl-none border border-stone-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-sm">{comment.user?.full_name}</span>
-                      <span className="text-xs text-stone-400">{new Date(comment.created_at).toLocaleDateString()}</span>
+        <div className="space-y-12">
+          <AnimatePresence mode="popLayout">
+            {comments.length > 0 ? (
+              comments.map((comment, idx) => (
+                <motion.div 
+                  key={comment.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="flex space-x-6 group"
+                >
+                  <Avatar className="h-14 w-14 border-2 border-primary/20 shrink-0">
+                    <AvatarImage src={comment.user?.avatar_url} />
+                    <AvatarFallback className="bg-muted text-primary font-serif">{comment.user?.full_name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-grow space-y-4">
+                    <div className="bg-card p-10 rounded-[3rem] rounded-tl-none border border-border shadow-lg group-hover:shadow-xl transition-all">
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="font-serif font-bold text-xl">{comment.user?.full_name}</span>
+                        <span className="text-sm font-serif italic text-muted-foreground">{new Date(comment.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <p className="text-xl font-serif italic text-muted-foreground leading-relaxed">{comment.content}</p>
                     </div>
-                    <p className="text-stone-700 leading-relaxed">{comment.content}</p>
+                    <div className="flex items-center space-x-8 ml-6">
+                      <button className="text-sm font-serif font-bold italic text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Reply</button>
+                      <button className="text-sm font-serif font-bold italic text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Like</button>
+                      <button className="text-sm font-serif font-bold italic text-muted-foreground hover:text-destructive transition-colors uppercase tracking-widest" onClick={handleReport}>Report</button>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-4 mt-2 ml-2">
-                    <button className="text-xs font-bold text-stone-400 hover:text-red-600">Reply</button>
-                    <button className="text-xs font-bold text-stone-400 hover:text-red-600">Like</button>
-                    <button className="text-xs font-bold text-stone-400 hover:text-red-600" onClick={handleReport}>Report</button>
-                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-24 space-y-6"
+              >
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-muted mb-4">
+                  <MessageSquare className="h-8 w-8 text-muted-foreground" />
                 </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-stone-500 text-center py-12 italic">No comments yet. Be the first to share your thoughts!</p>
-          )}
+                <p className="text-2xl font-serif italic text-muted-foreground">No reflections yet. Be the first to inscribe your thoughts.</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
     </div>

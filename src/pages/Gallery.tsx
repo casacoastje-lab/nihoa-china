@@ -84,66 +84,87 @@ export default function Gallery() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
-        <div>
-          <h1 className="text-5xl font-bold tracking-tighter mb-2">VISUAL <span className="text-red-600">JOURNEY</span></h1>
-          <p className="text-stone-500">A curated collection of moments and landmarks across China.</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-12"
+      >
+        <div className="space-y-6 max-w-2xl">
+          <div className="inline-flex items-center space-x-4 text-primary">
+            <div className="h-px w-12 bg-primary" />
+            <span className="font-serif italic text-xl font-bold uppercase tracking-widest">Visual Archive 视觉档案</span>
+          </div>
+          <h1 className="text-7xl font-serif font-bold tracking-tight leading-[0.85]">
+            CURATED <br /> <span className="text-primary italic">MOMENTS</span>
+          </h1>
+          <p className="text-2xl font-serif text-muted-foreground leading-relaxed italic">
+            A photographic exploration of China's vast landscapes, ancient traditions, and futuristic urbanities.
+          </p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 h-4 w-4" />
+        <div className="flex flex-col sm:flex-row gap-6 w-full md:w-auto">
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
             <Input 
-              placeholder="Search gallery..." 
-              className="pl-10 rounded-full bg-white border-stone-200"
+              placeholder="Search the archive..." 
+              className="pl-12 h-14 rounded-full bg-card border-border font-serif italic text-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
-            {categories.map(cat => (
-              <Button
-                key={cat}
-                variant={activeCategory === cat ? "default" : "outline"}
-                size="sm"
-                className={`rounded-full whitespace-nowrap ${activeCategory === cat ? 'bg-red-600 hover:bg-red-700' : ''}`}
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </Button>
-            ))}
-          </div>
         </div>
+      </motion.div>
+
+      <div className="flex gap-3 overflow-x-auto pb-8 mb-12 no-scrollbar border-b border-border">
+        {categories.map(cat => (
+          <Button
+            key={cat}
+            variant={activeCategory === cat ? "default" : "outline"}
+            className={`rounded-full px-8 py-6 text-lg font-serif italic transition-all ${activeCategory === cat ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'border-border hover:border-primary hover:text-primary'}`}
+            onClick={() => setActiveCategory(cat)}
+          >
+            {cat}
+          </Button>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <AnimatePresence>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <AnimatePresence mode="popLayout">
           {filteredItems.map((item, idx) => (
             <motion.div
               key={item.id}
               layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
               onClick={() => setSelectedItem(item)}
               className="group cursor-pointer"
             >
-              <Card className="overflow-hidden border-none shadow-sm hover:shadow-2xl transition-all duration-500 rounded-[2.5rem] bg-white">
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img 
-                    src={item.image} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
-                    <Badge className="w-fit mb-3 bg-red-600 border-none">{item.category}</Badge>
-                    <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
-                    <p className="text-stone-300 text-sm line-clamp-2">{item.description}</p>
-                  </div>
+              <Card className="overflow-hidden border-none shadow-xl hover:shadow-2xl transition-all duration-700 rounded-[3rem] bg-card relative aspect-[4/5]">
+                <img 
+                  src={item.image} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 flex flex-col justify-end p-10">
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    className="space-y-4"
+                  >
+                    <Badge className="bg-primary text-white border-none font-serif italic px-4 py-1">{item.category}</Badge>
+                    <h3 className="text-3xl font-serif font-bold text-background leading-tight">{item.title}</h3>
+                    <div className="flex items-center text-background/60 text-sm font-serif italic">
+                      <MapPin className="mr-2 h-4 w-4 text-primary" /> {item.location}
+                    </div>
+                  </motion.div>
                 </div>
+                
+                {/* Decorative Frame */}
+                <div className="absolute inset-4 border border-white/10 rounded-[2.5rem] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               </Card>
             </motion.div>
           ))}
@@ -151,66 +172,85 @@ export default function Gallery() {
       </div>
 
       {filteredItems.length === 0 && (
-        <div className="text-center py-24">
-          <ImageIcon className="mx-auto h-16 w-16 text-stone-200 mb-4" />
-          <h3 className="text-xl font-bold">No images found</h3>
-          <p className="text-stone-500">Try a different search or category.</p>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-32 space-y-6"
+        >
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-muted mb-4">
+            <ImageIcon className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-3xl font-serif font-bold italic">No records found</h3>
+          <p className="text-xl font-serif italic text-muted-foreground">Try adjusting your search or category filters.</p>
+        </motion.div>
       )}
 
       <Dialog open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden rounded-[3rem] border-none bg-white">
+        <DialogContent className="max-w-6xl p-0 overflow-hidden rounded-[4rem] border-none bg-card shadow-2xl">
           {selectedItem && (
             <div className="flex flex-col lg:flex-row h-full max-h-[90vh]">
-              <div className="lg:w-3/5 relative bg-stone-100">
-                <img 
+              <div className="lg:w-3/5 relative overflow-hidden">
+                <motion.img 
+                  initial={{ scale: 1.1, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8 }}
                   src={selectedItem.image} 
                   alt={selectedItem.title} 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
               </div>
-              <div className="lg:w-2/5 p-10 flex flex-col overflow-y-auto">
-                <DialogHeader className="mb-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <Badge className="bg-red-100 text-red-600 hover:bg-red-100 border-none uppercase text-[10px] tracking-widest font-bold px-3">
+              <div className="lg:w-2/5 p-12 lg:p-16 flex flex-col overflow-y-auto bg-card">
+                <DialogHeader className="mb-10 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none font-serif italic text-lg px-6 py-2 rounded-full">
                       {selectedItem.category}
                     </Badge>
-                    <div className="flex items-center text-xs text-stone-400 font-medium">
-                      <Calendar className="mr-1 h-3 w-3" /> {selectedItem.date}
+                    <div className="flex items-center text-sm font-serif italic text-muted-foreground">
+                      <Calendar className="mr-2 h-4 w-4" /> {selectedItem.date}
                     </div>
                   </div>
-                  <DialogTitle className="text-3xl font-bold tracking-tighter leading-tight mb-4">
+                  <DialogTitle className="text-5xl font-serif font-bold tracking-tight leading-[0.9] mb-4">
                     {selectedItem.title}
                   </DialogTitle>
-                  <div className="flex items-center text-stone-500 text-sm mb-6">
-                    <MapPin className="mr-2 h-4 w-4 text-red-600" /> {selectedItem.location}
+                  <div className="flex items-center text-primary text-xl font-serif italic">
+                    <MapPin className="mr-3 h-5 w-5" /> {selectedItem.location}
                   </div>
-                  <DialogDescription className="text-stone-600 text-lg leading-relaxed italic">
+                  <DialogDescription className="text-2xl font-serif italic text-muted-foreground leading-relaxed border-l-4 border-primary pl-6 py-2">
                     "{selectedItem.description}"
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className="space-y-6 flex-grow">
-                  <div className="p-6 bg-stone-50 rounded-3xl border border-stone-100">
-                    <h4 className="font-bold flex items-center mb-3">
-                      <Info className="mr-2 h-4 w-4 text-red-600" /> Historical Context
+                <div className="space-y-8 flex-grow">
+                  <div className="space-y-4">
+                    <h4 className="font-serif font-bold text-xl flex items-center uppercase tracking-widest text-foreground/60">
+                      <Info className="mr-3 h-5 w-5 text-primary" /> Historical Context
                     </h4>
-                    <p className="text-stone-600 text-sm leading-relaxed">
+                    <p className="text-lg font-serif italic text-muted-foreground leading-relaxed">
                       {selectedItem.info}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-stone-100 flex gap-4">
-                  <Button className="flex-grow bg-red-600 hover:bg-red-700 rounded-full h-12">
-                    Share Moment
+                <div className="mt-12 pt-8 border-t border-border flex gap-6">
+                  <Button className="flex-grow bg-primary hover:bg-primary/90 text-white rounded-full h-16 text-xl font-serif italic shadow-xl shadow-primary/20">
+                    Share Moment 分享
                   </Button>
-                  <Button variant="outline" className="rounded-full h-12 border-stone-200">
-                    Download
+                  <Button variant="outline" className="rounded-full h-16 w-16 p-0 border-border hover:border-primary hover:text-primary transition-all">
+                    <ImageIcon className="h-6 w-6" />
                   </Button>
                 </div>
               </div>
+              
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="absolute top-6 right-6 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-md"
+                onClick={() => setSelectedItem(null)}
+              >
+                <X className="h-6 w-6" />
+              </Button>
             </div>
           )}
         </DialogContent>

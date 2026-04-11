@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ThemeProvider } from 'next-themes';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Gallery from './pages/Gallery';
@@ -63,11 +64,13 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppRoutes />
-        <Toaster />
-      </Router>
-    </AuthProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <AuthProvider>
+        <Router>
+          <AppRoutes />
+          <Toaster />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

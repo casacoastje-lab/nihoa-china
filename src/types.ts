@@ -5,6 +5,8 @@ export interface UserProfile {
   email: string;
   full_name: string;
   avatar_url?: string;
+  bio?: string;
+  bio_zh?: string;
   role: UserRole;
   is_approved_blogger: boolean;
   created_at: string;
