@@ -4,26 +4,18 @@ import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Badge } from '@/src/components/ui/badge';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
-import { MapPin, Search, Navigation, Info, Layers, Filter } from 'lucide-react';
+import { MapPin, Search, Navigation, Info, Layers, Filter, Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 import AMapLoader from '@amap/amap-jsapi-loader';
-
-const landmarks = [
-  { id: 1, name: 'The Great Wall', category: 'History', lat: 40.4319, lng: 116.5704, description: 'One of the greatest wonders of the world.', image: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=800' },
-  { id: 2, name: 'Forbidden City', category: 'History', lat: 39.9163, lng: 116.3972, description: 'Imperial palace from the Ming dynasty.', image: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&q=80&w=800' },
-  { id: 3, name: 'The Bund', category: 'Landmark', lat: 31.2406, lng: 121.4906, description: 'Famous waterfront area in central Shanghai.', image: 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&q=80&w=800' },
-  { id: 4, name: 'Terracotta Army', category: 'History', lat: 34.3841, lng: 109.2785, description: 'Collection of terracotta sculptures depicting the armies of Qin Shi Huang.', image: 'https://images.unsplash.com/photo-1599571234349-bb22800c582d?auto=format&fit=crop&q=80&w=800' },
-  { id: 5, name: 'West Lake', category: 'Nature', lat: 30.2438, lng: 120.1497, description: 'Freshwater lake in Hangzhou, famous for its beauty.', image: 'https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?auto=format&fit=crop&q=80&w=800' },
-  { id: 6, name: 'Potala Palace', category: 'History', lat: 29.6579, lng: 91.1172, description: 'Winter palace of the Dalai Lama since the 7th century.', image: 'https://images.unsplash.com/photo-1541123356219-284ebe98ae3b?auto=format&fit=crop&q=80&w=800' },
-  { id: 7, name: 'Yellow Mountain', category: 'Nature', lat: 30.1324, lng: 118.1739, description: 'Mountain range in southern Anhui province.', image: 'https://images.unsplash.com/photo-1582298538104-fe2e74c27f59?auto=format&fit=crop&q=80&w=800' },
-  { id: 8, name: 'Li River', category: 'Nature', lat: 25.2736, lng: 110.2902, description: 'Famous for its karst landscape in Guilin.', image: 'https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?auto=format&fit=crop&q=80&w=800' },
-  { id: 9, name: 'Oriental Pearl Tower', category: 'Landmark', lat: 31.2397, lng: 121.4997, description: 'TV tower in Shanghai, a distinct landmark.', image: 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&q=80&w=800' },
-];
+import { supabase } from '@/src/lib/supabase';
+import { Landmark } from '@/src/types';
+import { toast } from 'sonner';
 
 const categories = ['All', 'History', 'Landmark', 'Nature', 'Art', 'Culture', 'Food', 'Architecture'];
 
 export default function MapPage() {
-  const [selectedLandmark, setSelectedLandmark] = useState<any>(null);
+  const [landmarks, setLandmarks] = useState<Landmark[]>([]);
+  const [selectedLandmark, setSelectedLandmark] = useState<Landmark | null>(null);
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
@@ -32,7 +24,26 @@ export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<any[]>([]);
 
-  const handleMouseEnter = (landmark: any) => {
+  useEffect(() => {
+    const fetchLandmarks = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('landmarks')
+          .select('*')
+          .order('name', { ascending: true });
+        
+        if (error) throw error;
+        setLandmarks(data || []);
+      } catch (err: any) {
+        console.error('Error fetching landmarks:', err);
+        toast.error('Failed to load landmarks from database');
+      }
+    };
+
+    fetchLandmarks();
+  }, []);
+
+  const handleMouseEnter = (landmark: Landmark) => {
     if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
     setSelectedLandmark(landmark);
   };
@@ -40,7 +51,7 @@ export default function MapPage() {
   const handleMouseLeave = () => {
     hideTimeoutRef.current = setTimeout(() => {
       setSelectedLandmark(null);
-    }, 300); // Small delay to allow moving mouse to the popup
+    }, 300);
   };
 
   const handlePopupMouseEnter = () => {
@@ -48,6 +59,8 @@ export default function MapPage() {
   };
 
   useEffect(() => {
+    if (!landmarks.length) return;
+
     // Amap Security Config
     (window as any)._AMapSecurityConfig = {
       securityJsCode: import.meta.env.VITE_AMAP_SECRET || '850a1836abcd4a800204300fbdb2f417',
@@ -60,6 +73,10 @@ export default function MapPage() {
     }).then((AMap) => {
       if (!containerRef.current) return;
 
+      if (mapRef.current) {
+        mapRef.current.destroy();
+      }
+
       const map = new AMap.Map(containerRef.current, {
         viewMode: '3D',
         zoom: 5,
@@ -70,10 +87,7 @@ export default function MapPage() {
       map.addControl(new AMap.Scale());
       map.addControl(new AMap.ToolBar());
       map.addControl(new AMap.ControlBar({
-        position: {
-          top: '10px',
-          right: '10px'
-        }
+        position: { top: '10px', right: '10px' }
       }));
 
       mapRef.current = map;
@@ -82,6 +96,10 @@ export default function MapPage() {
       map.on('click', () => {
         setSelectedLandmark(null);
       });
+
+      // Clear old markers
+      markersRef.current.forEach(m => m.marker.setMap(null));
+      markersRef.current = [];
 
       // Add markers
       landmarks.forEach(landmark => {
@@ -110,14 +128,11 @@ export default function MapPage() {
     });
 
     return () => {
-      if (mapRef.current) {
-        mapRef.current.destroy();
-      }
       if (hideTimeoutRef.current) {
         clearTimeout(hideTimeoutRef.current);
       }
     };
-  }, []);
+  }, [landmarks]);
 
   useEffect(() => {
     if (mapRef.current && selectedLandmark) {
@@ -127,7 +142,9 @@ export default function MapPage() {
 
   const filteredLandmarks = landmarks.filter(l => 
     (activeCategory === 'All' || l.category === activeCategory) &&
-    l.name.toLowerCase().includes(searchQuery.toLowerCase())
+    (l.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+     l.name_zh?.includes(searchQuery) ||
+     l.province?.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const handleOpenInAmap = () => {
@@ -179,11 +196,15 @@ export default function MapPage() {
               >
                 <div className="flex items-start space-x-4">
                   <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0">
-                    <img src={l.image} alt={l.name} className="w-full h-full object-cover" />
+                    <img src={l.image_url} alt={l.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-grow">
-                    <h3 className="font-bold text-sm">{l.name}</h3>
-                    <p className="text-xs text-stone-500 line-clamp-1 mt-1">{l.description}</p>
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-bold text-sm">{l.name}</h3>
+                      <span className="text-[10px] text-stone-400 font-medium">{l.province}</span>
+                    </div>
+                    <p className="text-[10px] text-red-600 font-bold mb-1">{l.name_zh}</p>
+                    <p className="text-xs text-stone-500 line-clamp-1">{l.description}</p>
                     <Badge variant="outline" className="text-[9px] mt-2 uppercase tracking-widest">{l.category}</Badge>
                   </div>
                 </div>
@@ -227,14 +248,20 @@ export default function MapPage() {
           >
             <Card className="rounded-[2.5rem] overflow-hidden shadow-2xl border-none">
               <div className="relative h-48">
-                <img src={selectedLandmark.image} alt={selectedLandmark.name} className="w-full h-full object-cover" />
+                <img src={selectedLandmark.image_url} alt={selectedLandmark.name} className="w-full h-full object-cover" />
                 <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full bg-white/80 backdrop-blur-sm">
                   <Info size={18} />
                 </Button>
               </div>
               <CardContent className="p-8">
-                <Badge className="mb-3 bg-red-600">{selectedLandmark.category}</Badge>
-                <h3 className="text-2xl font-bold mb-2">{selectedLandmark.name}</h3>
+                <div className="flex items-center justify-between mb-3">
+                  <Badge className="bg-red-600">{selectedLandmark.category}</Badge>
+                  <span className="text-xs font-bold text-stone-400 flex items-center">
+                    <Globe className="mr-1 h-3 w-3" /> {selectedLandmark.province}
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold mb-1">{selectedLandmark.name}</h3>
+                <p className="text-red-600 font-bold text-sm mb-3">{selectedLandmark.name_zh}</p>
                 <p className="text-stone-500 text-sm leading-relaxed mb-6">
                   {selectedLandmark.description}
                 </p>

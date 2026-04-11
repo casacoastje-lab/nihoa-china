@@ -54,14 +54,14 @@ export default function Navbar() {
           <div className="flex items-center space-x-4">
             {user ? (
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger render={
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar>
                       <AvatarImage src={profile?.avatar_url} />
                       <AvatarFallback>{profile?.full_name?.charAt(0) || 'U'}</AvatarFallback>
                     </Avatar>
                   </Button>
-                </DropdownMenuTrigger>
+                } />
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                     <User className="mr-2 h-4 w-4" />

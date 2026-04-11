@@ -53,11 +53,12 @@ export interface VolunteerProgram {
 export interface Landmark {
   id: string;
   name: string;
+  name_zh?: string;
+  province?: string;
   description: string;
   category: string;
-  coordinates: {
-    lng: number;
-    lat: number;
-  };
+  lat: number;
+  lng: number;
   image_url: string;
+  created_at?: string;
 }

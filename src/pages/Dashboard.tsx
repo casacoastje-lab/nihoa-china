@@ -21,6 +21,18 @@ export default function Dashboard() {
   const [myPosts, setMyPosts] = useState<BlogPost[]>([]);
   const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+
+  // Settings state
+  const [fullName, setFullName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+
+  useEffect(() => {
+    if (profile) {
+      setFullName(profile.full_name || '');
+      setAvatarUrl(profile.avatar_url || '');
+    }
+  }, [profile]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +84,59 @@ export default function Dashboard() {
   const handleRestrictUser = async (userId: string) => {
     // Logic for restricting user (e.g., setting a 'restricted' flag)
     toast.info('User restriction logic would go here.');
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !profile) return;
+
+    setUpdating(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${profile.id}-${Math.random()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('profiles')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('profiles')
+        .getPublicUrl(filePath);
+
+      setAvatarUrl(publicUrl);
+      toast.success('Avatar uploaded! Don\'t forget to save changes.');
+    } catch (err: any) {
+      console.error('Upload error:', err);
+      toast.error(err.message || 'Failed to upload avatar');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!profile) return;
+    setUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: fullName,
+          avatar_url: avatarUrl,
+        })
+        .eq('id', profile.id);
+
+      if (error) throw error;
+      toast.success('Profile updated successfully!');
+      window.location.reload(); // Refresh to update context
+    } catch (err: any) {
+      console.error('Update error:', err);
+      toast.error(err.message || 'Failed to update profile');
+    } finally {
+      setUpdating(false);
+    }
   };
 
   return (
@@ -260,11 +325,34 @@ export default function Dashboard() {
               <CardDescription>Update your profile information and preferences.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
+              <div className="space-y-6">
+                <div className="flex flex-col items-center space-y-4 p-6 bg-stone-50 rounded-3xl border border-stone-100">
+                  <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
+                    <AvatarImage src={avatarUrl} />
+                    <AvatarFallback className="text-2xl">{fullName?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="relative">
+                    <Button variant="outline" size="sm" className="rounded-full" disabled={updating}>
+                      {updating ? 'Uploading...' : 'Change Picture'}
+                    </Button>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="absolute inset-0 opacity-0 cursor-pointer" 
+                      onChange={handleAvatarUpload}
+                      disabled={updating}
+                    />
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="full_name">Full Name</Label>
-                    <Input id="full_name" defaultValue={profile?.full_name} />
+                    <Input 
+                      id="full_name" 
+                      value={fullName} 
+                      onChange={(e) => setFullName(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
@@ -272,11 +360,22 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="avatar">Avatar URL</Label>
-                  <Input id="avatar" defaultValue={profile?.avatar_url} placeholder="https://..." />
+                  <Label htmlFor="avatar">Avatar URL (Manual)</Label>
+                  <Input 
+                    id="avatar" 
+                    value={avatarUrl} 
+                    onChange={(e) => setAvatarUrl(e.target.value)}
+                    placeholder="https://..." 
+                  />
                 </div>
               </div>
-              <Button className="bg-red-600 hover:bg-red-700">Save Changes</Button>
+              <Button 
+                className="bg-red-600 hover:bg-red-700 w-full sm:w-auto px-8" 
+                onClick={handleUpdateProfile}
+                disabled={updating}
+              >
+                {updating ? 'Saving...' : 'Save Changes'}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
