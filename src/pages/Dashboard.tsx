@@ -111,7 +111,7 @@ export default function Dashboard() {
         
         const { data: comments, count: commentsCount, error: commentsError } = await supabase
           .from('comments')
-          .select('*, blog_posts(title)')
+          .select('*, blog_posts(title)', { count: 'exact' })
           .eq('user_id', profile?.id)
           .order('created_at', { ascending: false })
           .limit(10);
@@ -333,7 +333,13 @@ export default function Dashboard() {
             </Avatar>
           </motion.div>
           <div className="absolute -bottom-4 -right-4 bg-primary text-white px-4 py-2 rounded-xl font-serif italic text-sm shadow-lg flex items-center">
-            <BookOpen className="mr-2 h-4 w-4" /> READER 读者
+            {profile?.role === 'admin' ? (
+              <><Award className="mr-2 h-4 w-4" /> ADMIN 管理员</>
+            ) : profile?.role === 'blogger' ? (
+              <><Edit3 className="mr-2 h-4 w-4" /> BLOGGER 博主</>
+            ) : (
+              <><BookOpen className="mr-2 h-4 w-4" /> READER 读者</>
+            )}
           </div>
         </div>
 
@@ -344,10 +350,10 @@ export default function Dashboard() {
                 {profile?.full_name} <span className="font-normal text-muted-foreground ml-2">{profile?.role === 'admin' ? '管理员' : profile?.role === 'blogger' ? '博主' : '读者'}</span>
               </h1>
               <p className="text-2xl font-serif text-muted-foreground mt-4 max-w-2xl leading-relaxed">
-                {profile?.bio || 'Curator of ancient scrolls and modern digital artifacts. Exploring the intersection of Han Dynasty philosophy and future tech.'}
+                {profile?.bio || 'No bio provided yet.'}
               </p>
               <p className="text-primary font-serif italic text-lg mt-2">
-                {profile?.bio_zh || '古卷策展人与现代数字文物的探索者。研究汉代哲学与未来科技的交汇点。'}
+                {profile?.bio_zh || '尚未提供简介。'}
               </p>
             </div>
           </div>
@@ -362,9 +368,9 @@ export default function Dashboard() {
         className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20"
       >
         {[
-          { label: isBlogger ? 'My Posts' : 'Total Stories', zh: isBlogger ? '我的文章' : '总文章', value: isBlogger ? stats.myPostsCount : stats.totalStories, icon: BookOpen, color: 'bg-red-50 text-red-600 dark:bg-red-950/30' },
+          { label: 'Total Stories', zh: '总文章', value: stats.totalStories, icon: BookOpen, color: 'bg-red-50 text-red-600 dark:bg-red-950/30' },
           { label: isAdmin ? 'Total Users' : 'Contributions', zh: isAdmin ? '总用户' : '贡献度', value: isAdmin ? stats.totalUsers : stats.contributions, icon: isAdmin ? Users : Award, color: 'bg-green-50 text-green-600 dark:bg-green-950/30' },
-          { label: isAdmin ? 'Total Posts' : 'Join Date', zh: isAdmin ? '总文章' : '加入日期', value: isAdmin ? stats.totalPosts : (profile?.created_at ? new Date(profile.created_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : 'Mar 2023'), icon: isAdmin ? BarChart3 : Calendar, color: 'bg-blue-50 text-blue-600 dark:bg-blue-950/30' },
+          { label: isBlogger ? 'My Posts' : 'Join Date', zh: isBlogger ? '我的文章' : '加入日期', value: isBlogger ? stats.myPostsCount : (profile?.created_at ? new Date(profile.created_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : 'N/A'), icon: isBlogger ? Edit3 : Calendar, color: 'bg-blue-50 text-blue-600 dark:bg-blue-950/30' },
         ].map((stat, i) => (
           <motion.div key={i} variants={itemVariants}>
             <Card className="rounded-[2.5rem] border-none shadow-sm bg-card hover:shadow-xl transition-all duration-500 group overflow-hidden">

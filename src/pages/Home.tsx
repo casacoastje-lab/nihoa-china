@@ -52,7 +52,7 @@ export default function Home() {
   return (
     <div ref={containerRef} className="relative overflow-hidden">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
         <motion.div style={{ y }} className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/40 z-10" />
           <img 
@@ -74,23 +74,23 @@ export default function Home() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="mb-8 inline-block"
+            className="mb-12 inline-block"
           >
             <span className="px-6 py-2 rounded-full border border-white/30 backdrop-blur-md text-white font-serif italic text-lg tracking-widest uppercase">
               The Living Scroll • 活着的长卷
             </span>
           </motion.div>
           
-          <h1 className="text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-none mb-8">
+          <h1 className="text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-none mb-16">
             ChinaVerse <br />
             <span className="text-primary italic">中华宇宙</span>
           </h1>
           
-          <p className="text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-12">
+          <p className="text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-20">
             "A digital sanctuary for the timeless spirit of China. Preserving the past, architecting the future."
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-10 mb-20">
             <Link 
               to="/learn" 
               className={buttonVariants({ 
@@ -112,7 +112,7 @@ export default function Home() {
               className={buttonVariants({ 
                 variant: "outline",
                 size: "lg", 
-                className: "border-white/30 text-white hover:bg-white/10 backdrop-blur-md rounded-full px-12 py-8 text-xl font-serif italic" 
+                className: "border-white/30 text-black hover:text-white hover:bg-white/10 backdrop-blur-md rounded-full px-12 py-8 text-xl font-serif italic" 
               })}
             >
               Explore Map 探索地图
@@ -123,7 +123,7 @@ export default function Home() {
         <motion.div 
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 text-white/50 flex flex-col items-center"
+          className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 text-white/50 flex flex-col items-center"
         >
           <span className="text-xs uppercase tracking-[0.3em] mb-4">Scroll to Unfold</span>
           <div className="w-px h-12 bg-gradient-to-b from-white/50 to-transparent" />
