@@ -5,6 +5,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Supabase credentials are missing! Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables via the Settings > Secrets menu.');
+} else {
+  console.log('Supabase initialized with URL:', supabaseUrl.substring(0, 12) + '...');
 }
 
 // Use a fallback that won't crash the build, but will fail gracefully at runtime
