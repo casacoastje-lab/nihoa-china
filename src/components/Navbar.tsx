@@ -1,5 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/src/contexts/AuthContext';
+import { cn } from '@/src/lib/utils';
 import { Button, buttonVariants } from './ui/button';
 import { 
   DropdownMenu, 
@@ -15,7 +16,10 @@ import { motion } from 'motion/react';
 export default function Navbar() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const isMapPage = location.pathname === '/map';
 
   const handleSignOut = async () => {
     await signOut();
@@ -30,30 +34,52 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20 items-center">
+    <nav className={cn(
+      "absolute top-0 left-0 right-0 z-50 transition-all duration-500",
+      isMapPage ? "mt-4 flex justify-center pointer-events-none" : "bg-transparent"
+    )}>
+      <div className={cn(
+        "transition-all duration-500 pointer-events-auto",
+        isMapPage 
+          ? "bg-card/90 backdrop-blur-md border border-border rounded-full px-6 shadow-2xl mx-4 max-w-fit" 
+          : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full"
+      )}>
+        <div className={cn(
+          "flex justify-between items-center transition-all duration-500",
+          isMapPage ? "h-14 space-x-8" : "h-20"
+        )}>
           <div className="flex items-center">
             <Link to="/" className="group flex items-center space-x-2">
               <motion.span 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="text-2xl font-serif font-bold text-primary tracking-tight"
+                className={cn(
+                  "font-serif font-bold text-primary tracking-tight transition-all",
+                  isMapPage ? "text-lg" : "text-2xl"
+                )}
               >
-                ChinaVerse <span className="text-foreground font-normal">中华宇宙</span>
+                ChinaVerse {!isMapPage && <span className="text-foreground font-normal">中华宇宙</span>}
               </motion.span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-10">
+          <div className={cn(
+            "hidden md:flex items-center transition-all",
+            isMapPage ? "space-x-6" : "space-x-10"
+          )}>
             {navLinks.map((link) => (
               <Link 
                 key={link.to} 
                 to={link.to} 
                 className="group flex flex-col items-center transition-colors hover:text-primary text-foreground"
               >
-                <span className="text-sm font-medium tracking-wide">{link.label} {link.zh}</span>
+                <span className={cn(
+                  "font-medium tracking-wide transition-all",
+                  isMapPage ? "text-xs" : "text-sm"
+                )}>
+                  {link.label} {isMapPage ? "" : link.zh}
+                </span>
                 <motion.div 
                   className="h-0.5 w-0 bg-primary mt-0.5"
                   whileHover={{ width: '100%' }}
@@ -63,14 +89,20 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center space-x-6">
+          <div className={cn(
+            "flex items-center transition-all",
+            isMapPage ? "space-x-4" : "space-x-6"
+          )}>
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger render={
-                  <Button variant="ghost" className="relative h-12 w-12 rounded-full p-0.5 border-2 border-primary/20 hover:border-primary transition-colors">
+                  <Button variant="ghost" className={cn(
+                    "relative rounded-full p-0.5 border-2 border-primary/20 hover:border-primary transition-all",
+                    isMapPage ? "h-8 w-8" : "h-12 w-12"
+                  )}>
                     <Avatar className="h-full w-full">
                       <AvatarImage src={profile?.avatar_url} />
-                      <AvatarFallback className="bg-muted text-primary font-serif">{profile?.full_name?.charAt(0) || 'U'}</AvatarFallback>
+                      <AvatarFallback className="bg-muted text-primary font-serif text-[10px]">{profile?.full_name?.charAt(0) || 'U'}</AvatarFallback>
                     </Avatar>
                   </Button>
                 } />
@@ -96,14 +128,17 @@ export default function Navbar() {
             ) : (
               <Button 
                 onClick={() => navigate('/auth')} 
-                className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-6 text-base font-serif italic"
+                className={cn(
+                  "bg-primary hover:bg-primary/90 text-white rounded-full font-serif italic transition-all",
+                  isMapPage ? "px-4 py-2 text-xs h-8" : "px-8 py-6 text-base"
+                )}
               >
-                Join the Scroll
+                {isMapPage ? "Join" : "Join the Scroll"}
               </Button>
             )}
             
             <button className="md:hidden p-2 text-foreground" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              <Menu size={28} />
+              <Menu size={isMapPage ? 20 : 28} />
             </button>
           </div>
         </div>
