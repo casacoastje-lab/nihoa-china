@@ -9,9 +9,9 @@ import {
   DropdownMenuTrigger 
 } from './ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Map, BookOpen, Image as ImageIcon, Gamepad2, User, LogOut, Settings, Menu } from 'lucide-react';
+import { Map, BookOpen, Image as ImageIcon, Gamepad2, User, LogOut, Settings, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function Navbar() {
   const { user, profile, signOut } = useAuth();
@@ -55,10 +55,10 @@ export default function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 className={cn(
                   "font-serif font-bold text-primary tracking-tight transition-all",
-                  isMapPage ? "text-lg" : "text-2xl"
+                  isMapPage ? "text-base sm:text-lg" : "text-xl sm:text-2xl"
                 )}
               >
-                ChinaVerse {!isMapPage && <span className="text-foreground font-normal">中华宇宙</span>}
+                ChinaVerse {!isMapPage && <span className="hidden xs:inline text-foreground font-normal">中华宇宙</span>}
               </motion.span>
             </Link>
           </div>
@@ -138,32 +138,51 @@ export default function Navbar() {
             )}
             
             <button className="md:hidden p-2 text-foreground" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              <Menu size={isMapPage ? 20 : 28} />
+              {isMenuOpen ? <X size={isMapPage ? 20 : 28} /> : <Menu size={isMapPage ? 20 : 28} />}
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="md:hidden bg-background border-b border-border py-8 px-6 space-y-6"
-        >
-          {navLinks.map((link) => (
-            <Link 
-              key={link.to} 
-              to={link.to} 
-              className="flex items-center justify-between text-xl font-serif text-foreground"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span>{link.label}</span>
-              <span className="text-muted-foreground">{link.zh}</span>
-            </Link>
-          ))}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-background/95 backdrop-blur-lg border-b border-border overflow-hidden"
+          >
+            <div className="py-8 px-6 space-y-6">
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.to} 
+                  to={link.to} 
+                  className="flex items-center justify-between text-xl font-serif text-foreground hover:text-primary transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <div className="flex items-center space-x-4">
+                    <link.icon className="h-5 w-5 text-primary" />
+                    <span>{link.label}</span>
+                  </div>
+                  <span className="text-sm text-muted-foreground uppercase tracking-widest">{link.zh}</span>
+                </Link>
+              ))}
+              {!user && (
+                <Button 
+                  onClick={() => {
+                    navigate('/auth');
+                    setIsMenuOpen(false);
+                  }} 
+                  className="w-full bg-primary text-white rounded-full py-6 text-lg font-serif italic"
+                >
+                  Join the Scroll
+                </Button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

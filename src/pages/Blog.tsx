@@ -63,12 +63,12 @@ export default function Blog() {
         <div className="space-y-6 max-w-2xl">
           <div className="inline-flex items-center space-x-4 text-primary">
             <div className="h-px w-12 bg-primary" />
-            <span className="font-serif italic text-xl font-bold uppercase tracking-widest">The Chronicle 编年史</span>
+            <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">The Chronicle 编年史</span>
           </div>
-          <h1 className="text-7xl font-serif font-bold tracking-tight leading-[0.85]">
+          <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight leading-[0.85]">
             COMMUNITY <br /> <span className="text-primary italic">STORIES</span>
           </h1>
-          <p className="text-2xl font-serif text-muted-foreground leading-relaxed italic">
+          <p className="text-xl sm:text-2xl font-serif text-muted-foreground leading-relaxed italic">
             Insights, guides, and personal experiences from the heart of the Middle Kingdom.
           </p>
         </div>
@@ -86,12 +86,12 @@ export default function Blog() {
         </div>
       </motion.div>
 
-      <div className="flex gap-3 overflow-x-auto pb-0 mb-16 no-scrollbar border-b border-border pl-[3px] pr-[3px]">
+      <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 mb-12 sm:mb-16 no-scrollbar border-b border-border pl-[3px] pr-[3px]">
         {categories.map(cat => (
           <Button
             key={cat}
             variant={categoryFilter === cat.toLowerCase() ? "default" : "outline"}
-            className={`rounded-full px-8 py-6 text-lg font-serif italic transition-all ${categoryFilter === cat.toLowerCase() ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'border-border bg-card text-foreground hover:border-primary hover:text-primary'}`}
+            className={`rounded-full px-5 sm:px-8 py-4 sm:py-6 text-base sm:text-lg font-serif italic transition-all shrink-0 ${categoryFilter === cat.toLowerCase() ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'border-border bg-card text-foreground hover:border-primary hover:text-primary'}`}
             onClick={() => setSearchParams({ category: cat.toLowerCase() })}
           >
             {cat}
@@ -147,25 +147,25 @@ export default function Blog() {
                       {post.category}
                     </Badge>
                   </div>
-                  <CardContent className="p-10 flex flex-col flex-grow">
-                    <div className="flex items-center space-x-6 mb-6 text-sm font-serif italic text-muted-foreground uppercase tracking-widest">
+                  <CardContent className="p-6 sm:p-10 flex flex-col flex-grow">
+                    <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-4 sm:mb-6 text-xs sm:text-sm font-serif italic text-muted-foreground uppercase tracking-widest">
                       <div className="flex items-center">
-                        <Calendar className="mr-2 h-4 w-4 text-primary" />
+                        <Calendar className="mr-2 h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                         {new Date(post.created_at).toLocaleDateString()}
                       </div>
                       <div className="flex items-center">
-                        <UserIcon className="mr-2 h-4 w-4 text-primary" />
+                        <UserIcon className="mr-2 h-3 w-3 sm:h-4 sm:w-4 text-primary" />
                         {post.author?.full_name || 'Anonymous'}
                       </div>
                     </div>
-                    <h3 className="text-3xl font-serif font-bold mb-6 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+                    <h3 className="text-2xl sm:text-3xl font-serif font-bold mb-4 sm:mb-6 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
                       {post.title}
                     </h3>
-                    <p className="text-lg font-serif italic text-muted-foreground line-clamp-3 leading-relaxed mb-8">
+                    <p className="text-base sm:text-lg font-serif italic text-muted-foreground line-clamp-3 leading-relaxed mb-6 sm:mb-8">
                       {post.content.replace(/[#*`]/g, '').substring(0, 150)}...
                     </p>
-                    <div className="mt-auto flex items-center text-foreground font-serif font-bold italic text-lg group-hover:translate-x-3 transition-transform">
-                      Read Story 阅读故事 <ArrowRight className="ml-3 h-5 w-5 text-primary" />
+                    <div className="mt-auto flex items-center text-foreground font-serif font-bold italic text-base sm:text-lg group-hover:translate-x-3 transition-transform">
+                      Read Story 阅读故事 <ArrowRight className="ml-3 h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                     </div>
                   </CardContent>
                 </Card>

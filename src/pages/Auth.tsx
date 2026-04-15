@@ -70,30 +70,30 @@ export default function Auth() {
         transition={{ duration: 0.8 }}
         className="w-full max-w-2xl z-10"
       >
-        <div className="text-center mb-16 space-y-4">
+        <div className="text-center mb-12 sm:mb-16 space-y-4">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="inline-flex items-center space-x-3 text-primary mb-4"
+            className="inline-flex items-center space-x-3 text-primary mb-2 sm:mb-4"
           >
-            <Sparkles className="h-6 w-6" />
-            <span className="font-serif italic text-xl font-bold uppercase tracking-widest">The Gateway 门户</span>
+            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">The Gateway 门户</span>
           </motion.div>
-          <h1 className="text-7xl font-serif font-bold tracking-tight leading-[0.85] mb-6">
+          <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight leading-[0.85] mb-4 sm:mb-6">
             JOIN THE <br /> <span className="text-primary italic">COMMUNITY</span>
           </h1>
-          <p className="text-xl font-serif text-muted-foreground italic max-w-md mx-auto">
+          <p className="text-lg sm:text-xl font-serif text-muted-foreground italic max-w-md mx-auto">
             Enter the ChinaVerse and begin your journey through the Middle Kingdom's digital scrolls.
           </p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-12 bg-card p-2 rounded-full border-none h-20">
-            <TabsTrigger value="login" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-xl transition-all h-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8 sm:mb-12 bg-card p-1.5 sm:p-2 rounded-full border-none h-16 sm:h-20">
+            <TabsTrigger value="login" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-lg sm:text-xl transition-all h-full">
               Login 登录
             </TabsTrigger>
-            <TabsTrigger value="register" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-xl transition-all h-full">
+            <TabsTrigger value="register" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white font-serif italic text-lg sm:text-xl transition-all h-full">
               Register 注册
             </TabsTrigger>
           </TabsList>
@@ -106,39 +106,39 @@ export default function Auth() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.5 }}
               >
-                <Card className="border-none shadow-2xl rounded-[3rem] bg-card overflow-hidden">
+                <Card className="border-none shadow-2xl rounded-[2rem] sm:rounded-[3rem] bg-card overflow-hidden">
                   <form onSubmit={handleLogin}>
-                    <CardHeader className="p-12 pb-6">
-                      <CardTitle className="text-4xl font-serif font-bold">Welcome Back</CardTitle>
-                      <CardDescription className="text-lg font-serif italic">Enter your credentials to access the archive.</CardDescription>
+                    <CardHeader className="p-8 sm:p-12 pb-4 sm:pb-6">
+                      <CardTitle className="text-3xl sm:text-4xl font-serif font-bold">Welcome Back</CardTitle>
+                      <CardDescription className="text-base sm:text-lg font-serif italic">Enter your credentials to access the archive.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-12 pt-0 space-y-8">
+                    <CardContent className="p-8 sm:p-12 pt-0 space-y-6 sm:space-y-8">
                       <div className="space-y-3">
-                        <Label htmlFor="email" className="font-serif italic text-lg ml-2">Email Address</Label>
+                        <Label htmlFor="email" className="font-serif italic text-base sm:text-lg ml-2">Email Address</Label>
                         <Input 
                           id="email" 
                           type="email" 
                           placeholder="name@example.com" 
-                          className="h-16 rounded-2xl bg-muted/50 border-border font-serif text-lg px-6 focus:ring-primary"
+                          className="h-14 sm:h-16 rounded-2xl bg-muted/50 border-border font-serif text-base sm:text-lg px-6 focus:ring-primary"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required 
                         />
                       </div>
                       <div className="space-y-3">
-                        <Label htmlFor="password" title="Password" className="font-serif italic text-lg ml-2">Password</Label>
+                        <Label htmlFor="password" title="Password" className="font-serif italic text-base sm:text-lg ml-2">Password</Label>
                         <Input 
                           id="password" 
                           type="password" 
-                          className="h-16 rounded-2xl bg-muted/50 border-border font-serif text-lg px-6 focus:ring-primary"
+                          className="h-14 sm:h-16 rounded-2xl bg-muted/50 border-border font-serif text-base sm:text-lg px-6 focus:ring-primary"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required 
                         />
                       </div>
                     </CardContent>
-                    <CardFooter className="p-12 pt-0 bg-card border-none">
-                      <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white rounded-full h-16 text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={loading}>
+                    <CardFooter className="p-8 sm:p-12 pt-0 bg-card border-none">
+                      <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white rounded-full h-14 sm:h-16 text-lg sm:text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={loading}>
                         {loading ? 'Opening Scroll...' : (
                           <>
                             Login to Verse <LogIn className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />
@@ -158,71 +158,71 @@ export default function Auth() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.5 }}
               >
-                <Card className="border-none shadow-2xl rounded-[3rem] bg-card overflow-hidden">
+                <Card className="border-none shadow-2xl rounded-[2rem] sm:rounded-[3rem] bg-card overflow-hidden">
                   <form onSubmit={handleRegister}>
-                    <CardHeader className="p-12 pb-6">
-                      <CardTitle className="text-4xl font-serif font-bold">Create Identity</CardTitle>
-                      <CardDescription className="text-lg font-serif italic">Join the community and start your exploration.</CardDescription>
+                    <CardHeader className="p-8 sm:p-12 pb-4 sm:pb-6">
+                      <CardTitle className="text-3xl sm:text-4xl font-serif font-bold">Create Identity</CardTitle>
+                      <CardDescription className="text-base sm:text-lg font-serif italic">Join the community and start your exploration.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-12 pt-0 space-y-6">
+                    <CardContent className="p-8 sm:p-12 pt-0 space-y-4 sm:space-y-6">
                       <div className="space-y-3">
-                        <Label htmlFor="name" className="font-serif italic text-lg ml-2">Full Name</Label>
+                        <Label htmlFor="name" className="font-serif italic text-base sm:text-lg ml-2">Full Name</Label>
                         <Input 
                           id="name" 
                           placeholder="John Doe" 
-                          className="h-14 rounded-2xl bg-muted/50 border-border font-serif text-lg px-6 focus:ring-primary"
+                          className="h-12 sm:h-14 rounded-2xl bg-muted/50 border-border font-serif text-base sm:text-lg px-6 focus:ring-primary"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           required 
                         />
                       </div>
                       <div className="space-y-3">
-                        <Label htmlFor="reg-email" className="font-serif italic text-lg ml-2">Email Address</Label>
+                        <Label htmlFor="reg-email" className="font-serif italic text-base sm:text-lg ml-2">Email Address</Label>
                         <Input 
                           id="reg-email" 
                           type="email" 
                           placeholder="name@example.com" 
-                          className="h-14 rounded-2xl bg-muted/50 border-border font-serif text-lg px-6 focus:ring-primary"
+                          className="h-12 sm:h-14 rounded-2xl bg-muted/50 border-border font-serif text-base sm:text-lg px-6 focus:ring-primary"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required 
                         />
                       </div>
                       <div className="space-y-3">
-                        <Label htmlFor="reg-password" title="Password" className="font-serif italic text-lg ml-2">Password</Label>
+                        <Label htmlFor="reg-password" title="Password" className="font-serif italic text-base sm:text-lg ml-2">Password</Label>
                         <Input 
                           id="reg-password" 
                           type="password" 
-                          className="h-14 rounded-2xl bg-muted/50 border-border font-serif text-lg px-6 focus:ring-primary"
+                          className="h-12 sm:h-14 rounded-2xl bg-muted/50 border-border font-serif text-base sm:text-lg px-6 focus:ring-primary"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required 
                         />
                       </div>
                       <div className="space-y-3">
-                        <Label htmlFor="role" className="font-serif italic text-lg ml-2">I want to join as a:</Label>
+                        <Label htmlFor="role" className="font-serif italic text-base sm:text-lg ml-2">I want to join as a:</Label>
                         <Select value={role} onValueChange={setRole}>
-                          <SelectTrigger className="h-14 rounded-2xl bg-muted/50 border-none font-serif text-lg px-6 focus:ring-primary">
+                          <SelectTrigger className="h-12 sm:h-14 rounded-2xl bg-muted/50 border-none font-serif text-base sm:text-lg px-6 focus:ring-primary">
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
-                          <SelectContent className="rounded-2xl border-border bg-popover shadow-xl w-[300px]">
-                            <SelectItem value="reader" className="font-serif italic py-3">Reader (Explore & Comment)</SelectItem>
-                            <SelectItem value="blogger" className="font-serif italic py-3">Blogger (Share your stories)</SelectItem>
+                          <SelectContent className="rounded-2xl border-border bg-popover shadow-xl w-full sm:w-[300px]">
+                            <SelectItem value="reader" className="font-serif italic py-2 sm:py-3">Reader (Explore & Comment)</SelectItem>
+                            <SelectItem value="blogger" className="font-serif italic py-2 sm:py-3">Blogger (Share your stories)</SelectItem>
                           </SelectContent>
                         </Select>
                         {role === 'blogger' && (
                           <motion.p 
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
-                            className="text-sm font-serif italic text-primary mt-2 ml-2"
+                            className="text-xs sm:text-sm font-serif italic text-primary mt-2 ml-2"
                           >
                             * Blogger accounts require admin approval before posting.
                           </motion.p>
                         )}
                       </div>
                     </CardContent>
-                    <CardFooter className="p-12 pt-0 bg-card border-none">
-                      <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white rounded-full h-16 text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={loading}>
+                    <CardFooter className="p-8 sm:p-12 pt-0 bg-card border-none">
+                      <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white rounded-full h-14 sm:h-16 text-lg sm:text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={loading}>
                         {loading ? 'Inscribing...' : (
                           <>
                             Begin Journey <UserPlus className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />

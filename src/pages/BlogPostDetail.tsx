@@ -128,35 +128,35 @@ export default function BlogPostDetail() {
             <Sparkles className="h-5 w-5" />
             <span className="font-serif italic text-lg font-bold uppercase tracking-widest">{post.category}</span>
           </div>
-          <h1 className="text-7xl md:text-8xl font-serif font-bold tracking-tight leading-[0.85] max-w-4xl mx-auto">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold tracking-tight leading-[0.85] max-w-4xl mx-auto">
             {post.title}
           </h1>
           
-          <div className="flex flex-wrap items-center justify-center gap-10 py-10 border-y border-border">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 py-6 sm:py-10 border-y border-border">
             <div className="flex items-center space-x-4">
-              <Avatar className="h-14 w-14 border-2 border-primary/20">
+              <Avatar className="h-10 w-10 sm:h-14 sm:w-14 border-2 border-primary/20">
                 <AvatarImage src={post.author?.avatar_url} />
                 <AvatarFallback className="bg-muted text-primary font-serif">{post.author?.full_name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="text-left">
-                <p className="text-xl font-serif font-bold">{post.author?.full_name}</p>
-                <p className="text-sm font-serif italic text-muted-foreground uppercase tracking-widest">Scribe</p>
+                <p className="text-lg sm:text-xl font-serif font-bold">{post.author?.full_name}</p>
+                <p className="text-[10px] sm:text-sm font-serif italic text-muted-foreground uppercase tracking-widest">Scribe</p>
               </div>
             </div>
-            <div className="flex items-center text-lg font-serif italic text-muted-foreground">
-              <Calendar className="mr-3 h-5 w-5 text-primary" />
+            <div className="flex items-center text-base sm:text-lg font-serif italic text-muted-foreground">
+              <Calendar className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 text-primary" />
               {new Date(post.created_at).toLocaleDateString(undefined, { dateStyle: 'long' })}
             </div>
-            <div className="flex items-center text-lg font-serif italic text-muted-foreground">
-              <MessageSquare className="mr-3 h-5 w-5 text-primary" />
+            <div className="flex items-center text-base sm:text-lg font-serif italic text-muted-foreground">
+              <MessageSquare className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 text-primary" />
               {comments.length} Reflections
             </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" size="icon" className="rounded-full h-12 w-12 border-border hover:border-primary hover:text-primary transition-all">
-                <Share2 className="h-5 w-5" />
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <Button variant="outline" size="icon" className="rounded-full h-10 w-10 sm:h-12 sm:w-12 border-border hover:border-primary hover:text-primary transition-all">
+                <Share2 className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-full h-12 w-12 border-border hover:text-destructive transition-all" onClick={handleReport}>
-                <Flag className="h-5 w-5" />
+              <Button variant="outline" size="icon" className="rounded-full h-10 w-10 sm:h-12 sm:w-12 border-border hover:text-destructive transition-all" onClick={handleReport}>
+                <Flag className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function BlogPostDetail() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1 }}
-          className="relative aspect-[21/9] rounded-[4rem] overflow-hidden shadow-2xl"
+          className="relative aspect-video sm:aspect-[21/9] rounded-[2rem] sm:rounded-[4rem] overflow-hidden shadow-2xl"
         >
           <img 
             src={post.thumbnail_url || `https://picsum.photos/seed/${post.id}/1600/900`} 
@@ -182,7 +182,7 @@ export default function BlogPostDetail() {
           whileInView={{ opacity: 1 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="prose prose-stone dark:prose-invert prose-2xl max-w-none font-serif italic leading-relaxed prose-headings:font-bold prose-headings:not-italic prose-headings:tracking-tight prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-blockquote:border-primary prose-blockquote:bg-primary/5 prose-blockquote:p-8 prose-blockquote:rounded-3xl">
+          <div className="prose prose-stone dark:prose-invert prose-lg sm:prose-2xl max-w-none font-serif italic leading-relaxed prose-headings:font-bold prose-headings:not-italic prose-headings:tracking-tight prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-blockquote:border-primary prose-blockquote:bg-primary/5 prose-blockquote:p-6 sm:prose-blockquote:p-8 prose-blockquote:rounded-2xl sm:prose-blockquote:rounded-3xl">
             <ReactMarkdown>{post.content}</ReactMarkdown>
           </div>
         </motion.div>
@@ -215,10 +215,10 @@ export default function BlogPostDetail() {
       </article>
 
       {/* Comments Section */}
-      <section className="mt-40 max-w-3xl mx-auto space-y-16">
-        <div className="flex items-center space-x-6">
+      <section className="mt-20 sm:mt-40 max-w-3xl mx-auto space-y-12 sm:space-y-16">
+        <div className="flex items-center space-x-4 sm:space-x-6">
           <div className="h-px flex-grow bg-border" />
-          <h2 className="text-5xl font-serif font-bold italic whitespace-nowrap">Reflections ({comments.length})</h2>
+          <h2 className="text-3xl sm:text-5xl font-serif font-bold italic whitespace-nowrap">Reflections ({comments.length})</h2>
           <div className="h-px flex-grow bg-border" />
         </div>
 
@@ -227,22 +227,22 @@ export default function BlogPostDetail() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             onSubmit={handleCommentSubmit} 
-            className="space-y-6 bg-card p-12 rounded-[3rem] border border-border shadow-xl"
+            className="space-y-6 bg-card p-6 sm:p-12 rounded-[2rem] sm:rounded-[3rem] border border-border shadow-xl"
           >
-            <div className="flex items-start space-x-6">
-              <Avatar className="h-14 w-14 border-2 border-primary/20">
+            <div className="flex flex-col sm:flex-row items-start gap-6">
+              <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-primary/20">
                 <AvatarImage src={profile?.avatar_url} />
                 <AvatarFallback className="bg-muted text-primary font-serif">{profile?.full_name?.charAt(0)}</AvatarFallback>
               </Avatar>
-              <div className="flex-grow space-y-6">
+              <div className="flex-grow w-full space-y-6">
                 <Textarea 
                   placeholder="Inscribe your thoughts..." 
-                  className="min-h-[180px] rounded-[2rem] bg-muted/50 border-border font-serif italic text-xl p-8 focus:ring-primary focus:border-primary"
+                  className="min-h-[150px] sm:min-h-[180px] rounded-[1.5rem] sm:rounded-[2rem] bg-muted/50 border-border font-serif italic text-lg sm:text-xl p-6 sm:p-8 focus:ring-primary focus:border-primary"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   required
                 />
-                <Button type="submit" className="bg-primary hover:bg-primary/90 text-white rounded-full h-16 px-12 text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={submitting}>
+                <Button type="submit" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-full h-14 sm:h-16 px-10 sm:px-12 text-lg sm:text-xl font-serif italic shadow-xl shadow-primary/20 group" disabled={submitting}>
                   {submitting ? 'Inscribing...' : (
                     <>
                       Post Reflection <MessageSquare className="ml-3 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -277,17 +277,17 @@ export default function BlogPostDetail() {
                     <AvatarFallback className="bg-muted text-primary font-serif">{comment.user?.full_name?.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-grow space-y-4">
-                    <div className="bg-card p-10 rounded-[3rem] rounded-tl-none border border-border shadow-lg group-hover:shadow-xl transition-all">
-                      <div className="flex items-center justify-between mb-6">
-                        <span className="font-serif font-bold text-xl">{comment.user?.full_name}</span>
-                        <span className="text-sm font-serif italic text-muted-foreground">{new Date(comment.created_at).toLocaleDateString()}</span>
+                    <div className="bg-card p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[3rem] rounded-tl-none border border-border shadow-lg group-hover:shadow-xl transition-all">
+                      <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <span className="font-serif font-bold text-lg sm:text-xl">{comment.user?.full_name}</span>
+                        <span className="text-xs sm:text-sm font-serif italic text-muted-foreground">{new Date(comment.created_at).toLocaleDateString()}</span>
                       </div>
-                      <p className="text-xl font-serif italic text-muted-foreground leading-relaxed">{comment.content}</p>
+                      <p className="text-lg sm:text-xl font-serif italic text-muted-foreground leading-relaxed">{comment.content}</p>
                     </div>
-                    <div className="flex items-center space-x-8 ml-6">
-                      <button className="text-sm font-serif font-bold italic text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Reply</button>
-                      <button className="text-sm font-serif font-bold italic text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Like</button>
-                      <button className="text-sm font-serif font-bold italic text-muted-foreground hover:text-destructive transition-colors uppercase tracking-widest" onClick={handleReport}>Report</button>
+                    <div className="flex items-center space-x-6 sm:space-x-8 ml-4 sm:ml-6">
+                      <button className="text-[10px] sm:text-sm font-serif font-bold italic text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Reply</button>
+                      <button className="text-[10px] sm:text-sm font-serif font-bold italic text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest">Like</button>
+                      <button className="text-[10px] sm:text-sm font-serif font-bold italic text-muted-foreground hover:text-destructive transition-colors uppercase tracking-widest" onClick={handleReport}>Report</button>
                     </div>
                   </div>
                 </motion.div>

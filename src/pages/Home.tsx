@@ -81,21 +81,21 @@ export default function Home() {
             </span>
           </motion.div>
           
-          <h1 className="text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-none mb-16">
+          <h1 className="text-5xl sm:text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-none mb-12 sm:mb-16">
             ChinaVerse <br />
             <span className="text-primary italic">中华宇宙</span>
           </h1>
           
-          <p className="text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-20">
+          <p className="text-lg sm:text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-12 sm:mb-20">
             "A digital sanctuary for the timeless spirit of China. Preserving the past, architecting the future."
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-10 mb-20">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-12 sm:mb-20">
             <Link 
               to="/learn" 
               className={buttonVariants({ 
                 size: "lg", 
-                className: "bg-primary hover:bg-primary/90 text-white rounded-full px-12 py-8 text-xl font-serif italic shadow-2xl shadow-primary/40 group" 
+                className: "w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-full px-10 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-serif italic shadow-2xl shadow-primary/40 group" 
               })}
             >
               Begin the Journey 开启旅程
@@ -112,7 +112,7 @@ export default function Home() {
               className={buttonVariants({ 
                 variant: "outline",
                 size: "lg", 
-                className: "border-white/30 text-white hover:bg-white/10 backdrop-blur-md rounded-full px-12 py-8 text-xl font-serif italic" 
+                className: "w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-md rounded-full px-10 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-serif italic" 
               })}
             >
               Explore Map 探索地图
@@ -131,34 +131,34 @@ export default function Home() {
       </section>
 
       {/* Philosophy Section */}
-      <section className="py-32 bg-background relative">
+      <section className="py-20 sm:py-32 bg-background relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               <div className="inline-flex items-center space-x-4 text-primary">
-                <div className="h-px w-12 bg-primary" />
-                <span className="font-serif italic text-xl font-bold uppercase tracking-widest">Our Philosophy 我们的哲学</span>
+                <div className="h-px w-8 sm:w-12 bg-primary" />
+                <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">Our Philosophy 我们的哲学</span>
               </div>
-              <h2 className="text-6xl font-serif font-bold tracking-tight leading-tight text-foreground">
+              <h2 className="text-3xl sm:text-6xl font-serif font-bold tracking-tight leading-tight text-foreground">
                 Infrastructure for <br />
                 <span className="italic text-primary">Cultural Continuity</span>
               </h2>
-              <p className="text-2xl font-serif text-muted-foreground leading-relaxed italic">
+              <p className="text-lg sm:text-2xl font-serif text-muted-foreground leading-relaxed italic">
                 We believe that culture is not a static artifact to be stored in a museum, but a living, breathing entity that evolves with every interaction.
               </p>
-              <div className="grid grid-cols-2 gap-8 pt-8">
-                <div className="space-y-2">
-                  <div className="text-4xl font-serif font-bold text-primary">5,000+</div>
-                  <p className="text-sm text-muted-foreground uppercase tracking-widest">Years of History</p>
+              <div className="grid grid-cols-2 gap-6 sm:gap-8 pt-4 sm:pt-8">
+                <div className="space-y-1 sm:space-y-2">
+                  <div className="text-3xl sm:text-4xl font-serif font-bold text-primary">5,000+</div>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground uppercase tracking-widest">Years of History</p>
                 </div>
-                <div className="space-y-2">
-                  <div className="text-4xl font-serif font-bold text-primary">1.4B+</div>
-                  <p className="text-sm text-muted-foreground uppercase tracking-widest">Global Voices</p>
+                <div className="space-y-1 sm:space-y-2">
+                  <div className="text-3xl sm:text-4xl font-serif font-bold text-primary">1.4B+</div>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground uppercase tracking-widest">Global Voices</p>
                 </div>
               </div>
             </motion.div>
@@ -189,14 +189,14 @@ export default function Home() {
       </section>
 
       {/* Bento Grid Features */}
-      <section className="py-32 bg-black">
+      <section className="py-20 sm:py-32 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20 space-y-4">
-            <h2 className="text-5xl font-serif font-bold tracking-tight text-foreground">Curated Experiences 策展体验</h2>
-            <p className="text-xl text-muted-foreground font-serif italic">Explore the many facets of the Middle Kingdom.</p>
+          <div className="text-center mb-12 sm:mb-20 space-y-4">
+            <h2 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-foreground">Curated Experiences 策展体验</h2>
+            <p className="text-lg sm:text-xl text-muted-foreground font-serif italic">Explore the many facets of the Middle Kingdom.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {features.map((feature, i) => (
               <motion.div
                 key={i}
@@ -207,16 +207,16 @@ export default function Home() {
                 whileHover={{ y: -10 }}
               >
                 <Link to={feature.to}>
-                  <div className="h-full bg-card rounded-[2.5rem] p-10 shadow-sm hover:shadow-2xl transition-all duration-500 border border-transparent hover:border-primary/20 flex flex-col group">
-                    <div className={`p-5 rounded-2xl ${feature.color} text-white w-fit mb-8 group-hover:scale-110 transition-transform duration-500`}>
-                      <feature.icon size={32} />
+                  <div className="h-full bg-card rounded-[2rem] sm:rounded-[2.5rem] p-8 sm:p-10 shadow-sm hover:shadow-2xl transition-all duration-500 border border-transparent hover:border-primary/20 flex flex-col group">
+                    <div className={`p-4 sm:p-5 rounded-2xl ${feature.color} text-white w-fit mb-6 sm:mb-8 group-hover:scale-110 transition-transform duration-500`}>
+                      <feature.icon size={28} className="sm:w-8 sm:h-8" />
                     </div>
-                    <h3 className="text-2xl font-serif font-bold mb-2 text-foreground">{feature.title}</h3>
-                    <p className="text-xs text-primary font-bold uppercase tracking-[0.2em] mb-6">{feature.zh}</p>
-                    <p className="text-muted-foreground font-serif italic leading-relaxed flex-grow">
+                    <h3 className="text-xl sm:text-2xl font-serif font-bold mb-2 text-foreground">{feature.title}</h3>
+                    <p className="text-[10px] sm:text-xs text-primary font-bold uppercase tracking-[0.2em] mb-4 sm:mb-6">{feature.zh}</p>
+                    <p className="text-base sm:text-lg font-serif italic text-muted-foreground leading-relaxed flex-grow">
                       {feature.desc}
                     </p>
-                    <div className="mt-8 flex items-center text-primary font-serif font-bold italic group-hover:translate-x-2 transition-transform">
+                    <div className="mt-6 sm:mt-8 flex items-center text-primary font-serif font-bold italic group-hover:translate-x-2 transition-transform">
                       Enter Scroll <ArrowRight className="ml-2 h-4 w-4" />
                     </div>
                   </div>
@@ -228,7 +228,7 @@ export default function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="py-20 sm:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-primary z-0" />
         <div className="absolute inset-0 opacity-10 z-10">
           <div className="grid grid-cols-10 h-full">
@@ -238,21 +238,21 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="max-w-4xl mx-auto px-4 relative z-20 text-center text-white space-y-12">
-          <Sparkles className="h-16 w-16 mx-auto text-white/50" />
-          <h2 className="text-6xl md:text-8xl font-serif font-bold tracking-tight">
-            Become a part of the <br />
+        <div className="max-w-4xl mx-auto px-4 relative z-20 text-center text-white space-y-8 sm:space-y-12">
+          <Sparkles className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-white/50" />
+          <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold tracking-tight">
+            Become a part of the <br className="hidden sm:block" />
             <span className="italic">Eternal Rhythm</span>
           </h2>
-          <p className="text-2xl font-serif italic text-white/80 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-2xl font-serif italic text-white/80 max-w-2xl mx-auto leading-relaxed">
             Join thousands of explorers, scholars, and creators in building the future of Chinese cultural heritage.
           </p>
-          <div className="pt-8">
+          <div className="pt-4 sm:pt-8">
             <Link 
               to="/auth" 
               className={buttonVariants({ 
                 size: "lg", 
-                className: "bg-black text-white hover:bg-white hover:text-black rounded-full px-16 py-8 text-2xl font-serif italic shadow-2xl" 
+                className: "w-full sm:w-auto bg-black text-white hover:bg-white hover:text-black rounded-full px-8 sm:px-16 py-5 sm:py-8 text-lg sm:text-2xl font-serif italic shadow-2xl" 
               })}
             >
               Join the Community 加入社区

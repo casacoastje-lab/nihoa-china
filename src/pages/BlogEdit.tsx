@@ -9,8 +9,9 @@ import { Textarea } from '@/src/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { toast } from 'sonner';
-import { Image as ImageIcon, FileText, X, Upload, Save, ArrowLeft, Sparkles } from 'lucide-react';
+import { Image as ImageIcon, FileText, X, Upload, Save, ArrowLeft, Sparkles, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { chatWithAI } from '@/src/lib/ai';
 
 export default function BlogEdit() {
   const { id } = useParams();
@@ -25,6 +26,37 @@ export default function BlogEdit() {
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [attachments, setAttachments] = useState<string[]>([]);
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleAIGenerate = async () => {
+    if (!title) {
+      toast.error('Please enter a title first');
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const prompt = `Write a blog post about "${title}" for a website called ChinaVerse. 
+      The category is ${category}. 
+      Format the output in Markdown. 
+      Include an introduction, several sections with headings, and a conclusion. 
+      Make it engaging and informative for people interested in Chinese culture, history, or travel.
+      Keep it between 500-800 words.`;
+
+      const generatedContent = await chatWithAI([
+        { role: 'system', content: 'You are an expert travel writer and historian specializing in Chinese culture.' },
+        { role: 'user', content: prompt }
+      ]);
+
+      setContent(generatedContent);
+      toast.success('Narrative inscribed by the Magic Scribe!');
+    } catch (err: any) {
+      console.error('AI Generation error:', err);
+      toast.error('The Magic Scribe is currently unavailable: ' + err.message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -194,7 +226,22 @@ export default function BlogEdit() {
               </div>
               
               <div className="space-y-4">
-                <Label htmlFor="content" className="text-2xl font-serif font-bold italic ml-4">The Narrative 叙述</Label>
+                <div className="flex justify-between items-center ml-4">
+                  <Label htmlFor="content" className="text-2xl font-serif font-bold italic">The Narrative 叙述</Label>
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    onClick={handleAIGenerate}
+                    disabled={isGenerating || !title}
+                    className="rounded-full border-primary/30 text-primary hover:bg-primary/5 font-serif italic"
+                  >
+                    {isGenerating ? (
+                      <span className="flex items-center"><Wand2 className="mr-2 h-4 w-4 animate-pulse" /> Channeling...</span>
+                    ) : (
+                      <span className="flex items-center"><Wand2 className="mr-2 h-4 w-4" /> Magic Scribe AI</span>
+                    )}
+                  </Button>
+                </div>
                 <Textarea 
                   id="content" 
                   placeholder="Unfold your story here... (Markdown is supported)" 

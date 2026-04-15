@@ -295,7 +295,7 @@ function ToneMaster() {
         />
       </div>
 
-      <div className="text-center p-12 bg-stone-50 rounded-[3rem] border border-stone-100 relative group">
+      <div className="text-center p-6 sm:p-12 bg-stone-50 rounded-[2rem] sm:rounded-[3rem] border border-stone-100 relative group">
         <Button 
           variant="ghost" 
           size="icon" 
@@ -310,8 +310,8 @@ function ToneMaster() {
           animate={{ scale: 1, opacity: 1 }}
           className="space-y-4"
         >
-          <h2 className="text-8xl font-bold text-stone-900">{toneGameData[index].word}</h2>
-          <p className="text-stone-500 text-xl italic">{toneGameData[index].meaning}</p>
+          <h2 className="text-6xl sm:text-8xl font-bold text-stone-900">{toneGameData[index].word}</h2>
+          <p className="text-stone-500 text-lg sm:text-xl italic">{toneGameData[index].meaning}</p>
           <div className="flex justify-center gap-2 mt-4">
             {toneGameData[index].examples.map(ex => (
               <Badge key={ex} variant="secondary" className="bg-white border-stone-200">{ex}</Badge>
@@ -424,7 +424,7 @@ function FlashcardLab() {
       </div>
 
       <div 
-        className="perspective-1000 h-[450px] w-full cursor-pointer group"
+        className="perspective-1000 h-[350px] sm:h-[450px] w-full cursor-pointer group"
         onClick={handleFlip}
       >
         <motion.div
@@ -432,43 +432,43 @@ function FlashcardLab() {
           animate={{ rotateY: isFlipped ? 180 : 0 }}
         >
           {/* Front */}
-          <div className="absolute inset-0 backface-hidden bg-white border-2 border-stone-100 rounded-[3rem] shadow-xl flex flex-col items-center justify-center p-12">
-            <div className="text-stone-100 absolute top-12 left-12 text-8xl font-bold select-none opacity-50">?</div>
-            <div className="text-9xl font-bold text-stone-900 mb-8">{hsk1Data[index].chinese}</div>
+          <div className="absolute inset-0 backface-hidden bg-white border-2 border-stone-100 rounded-[2rem] sm:rounded-[3rem] shadow-xl flex flex-col items-center justify-center p-8 sm:p-12">
+            <div className="text-stone-100 absolute top-8 left-8 sm:top-12 sm:left-12 text-6xl sm:text-8xl font-bold select-none opacity-50">?</div>
+            <div className="text-7xl sm:text-9xl font-bold text-stone-900 mb-8">{hsk1Data[index].chinese}</div>
             <div className="mt-auto flex flex-col items-center">
-              <p className="text-stone-400 uppercase tracking-widest text-xs font-bold mb-2">Click to reveal</p>
+              <p className="text-stone-400 uppercase tracking-widest text-[10px] sm:text-xs font-bold mb-2">Click to reveal</p>
               <RefreshCw className="h-4 w-4 text-stone-300 animate-spin-slow" />
             </div>
           </div>
 
           {/* Back */}
-          <div className="absolute inset-0 backface-hidden bg-stone-900 text-white border-2 border-stone-800 rounded-[3rem] shadow-xl flex flex-col items-center justify-center p-12 rotate-y-180">
-            <div className="absolute top-12 right-12">
+          <div className="absolute inset-0 backface-hidden bg-stone-900 text-white border-2 border-stone-800 rounded-[2rem] sm:rounded-[3rem] shadow-xl flex flex-col items-center justify-center p-8 sm:p-12 rotate-y-180">
+            <div className="absolute top-8 right-8 sm:top-12 sm:right-12">
               <Badge className="bg-red-600/20 text-red-500 border-red-500/30">HSK 1</Badge>
             </div>
             
-            <div className="text-center space-y-6">
+            <div className="text-center space-y-4 sm:space-y-6">
               <div>
-                <p className="text-red-500 text-sm font-bold uppercase tracking-widest mb-2">Pinyin</p>
-                <h3 className="text-6xl font-bold">{hsk1Data[index].pinyin}</h3>
+                <p className="text-red-500 text-[10px] sm:text-sm font-bold uppercase tracking-widest mb-1 sm:mb-2">Pinyin</p>
+                <h3 className="text-4xl sm:text-6xl font-bold">{hsk1Data[index].pinyin}</h3>
               </div>
               
-              <div className="w-12 h-1 bg-stone-700 mx-auto rounded-full" />
+              <div className="w-10 h-1 bg-stone-700 mx-auto rounded-full" />
               
               <div>
-                <p className="text-red-500 text-sm font-bold uppercase tracking-widest mb-2">Meaning</p>
-                <p className="text-3xl text-stone-300 font-medium">{hsk1Data[index].meaning}</p>
+                <p className="text-red-500 text-[10px] sm:text-sm font-bold uppercase tracking-widest mb-1 sm:mb-2">Meaning</p>
+                <p className="text-2xl sm:text-3xl text-stone-300 font-medium">{hsk1Data[index].meaning}</p>
               </div>
             </div>
 
-            <div className="mt-12 flex items-center space-x-4">
+            <div className="mt-8 sm:mt-12 flex items-center space-x-4">
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="rounded-full bg-white/5 border-white/10 hover:bg-white/10 text-white px-8"
+                className="rounded-full bg-white/5 border-white/10 hover:bg-white/10 text-white px-6 sm:px-8"
                 onClick={(e) => { e.stopPropagation(); speak(hsk1Data[index].chinese); }}
               >
-                <Volume2 className="mr-2 h-5 w-5" /> Pronounce
+                <Volume2 className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Pronounce
               </Button>
             </div>
           </div>
@@ -522,9 +522,9 @@ function PinyinMatcher() {
 
   return (
     <div className="space-y-8">
-      <div className="text-center p-12 bg-stone-900 text-white rounded-[3rem] border border-stone-800">
-        <h2 className="text-9xl font-bold">{currentWord.chinese}</h2>
-        <p className="text-stone-400 mt-4 italic">What is the pinyin for this character?</p>
+      <div className="text-center p-8 sm:p-12 bg-stone-900 text-white rounded-[2rem] sm:rounded-[3rem] border border-stone-800">
+        <h2 className="text-7xl sm:text-9xl font-bold">{currentWord.chinese}</h2>
+        <p className="text-stone-400 mt-4 italic text-sm sm:text-base">What is the pinyin for this character?</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -596,36 +596,36 @@ export default function Learn() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row items-end justify-between mb-20 gap-12"
+        className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 sm:mb-20 gap-8 sm:gap-12"
       >
-        <div className="text-left max-w-2xl space-y-6">
+        <div className="text-left max-w-2xl space-y-4 sm:space-y-6">
           <div className="inline-flex items-center space-x-4 text-primary">
-            <div className="h-px w-12 bg-primary" />
-            <span className="font-serif italic text-xl font-bold uppercase tracking-widest">Interactive Scrolls 互动卷轴</span>
+            <div className="h-px w-8 sm:w-12 bg-primary" />
+            <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">Interactive Scrolls 互动卷轴</span>
           </div>
-          <h1 className="text-7xl font-serif font-bold tracking-tight leading-[0.85]">
+          <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight leading-[0.85]">
             THE <span className="text-primary italic">KNOWLEDGE</span> <br /> ARCHIVE
           </h1>
-          <p className="text-2xl font-serif text-muted-foreground leading-relaxed italic">
+          <p className="text-xl sm:text-2xl font-serif text-muted-foreground leading-relaxed italic">
             Master the art of Hanzi, the rhythm of history, and the essence of culture through immersive digital challenges.
           </p>
         </div>
-        <div className="flex gap-6 w-full md:w-auto">
-          <Card className="p-8 bg-card rounded-[2.5rem] border-none shadow-xl flex flex-col items-center justify-center min-w-[160px]">
-            <Trophy className="text-primary mb-4 h-10 w-10" />
-            <div className="text-4xl font-serif font-bold italic">1,240</div>
-            <div className="text-xs text-muted-foreground uppercase tracking-widest font-bold mt-1">Total XP</div>
+        <div className="flex gap-4 sm:gap-6 w-full md:w-auto">
+          <Card className="p-6 sm:p-8 bg-card rounded-[2rem] sm:rounded-[2.5rem] border-none shadow-xl flex flex-col items-center justify-center flex-1 md:min-w-[160px]">
+            <Trophy className="text-primary mb-3 sm:mb-4 h-8 w-8 sm:h-10 sm:w-10" />
+            <div className="text-3xl sm:text-4xl font-serif font-bold italic">1,240</div>
+            <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest font-bold mt-1">Total XP</div>
           </Card>
-          <Card className="p-8 bg-primary text-white rounded-[2.5rem] border-none shadow-xl shadow-primary/20 flex flex-col items-center justify-center min-w-[160px]">
-            <Star className="text-white mb-4 h-10 w-10" />
-            <div className="text-4xl font-serif font-bold italic">Level 4</div>
-            <div className="text-xs text-white/60 uppercase tracking-widest font-bold mt-1">Explorer</div>
+          <Card className="p-6 sm:p-8 bg-primary text-white rounded-[2rem] sm:rounded-[2.5rem] border-none shadow-xl shadow-primary/20 flex flex-col items-center justify-center flex-1 md:min-w-[160px]">
+            <Star className="text-white mb-3 sm:mb-4 h-8 w-8 sm:h-10 sm:w-10" />
+            <div className="text-3xl sm:text-4xl font-serif font-bold italic">Level 4</div>
+            <div className="text-[10px] sm:text-xs text-white/60 uppercase tracking-widest font-bold mt-1">Explorer</div>
           </Card>
         </div>
       </motion.div>
 
-      <Tabs defaultValue="language" className="space-y-16 mt-10">
-        <TabsList className="flex justify-start bg-transparent space-x-4 h-auto overflow-x-auto pb-4 no-scrollbar border-b border-border">
+      <Tabs defaultValue="language" className="space-y-8 sm:space-y-16 mt-6 sm:mt-10">
+        <TabsList className="flex justify-start bg-transparent space-x-2 sm:space-x-4 h-auto overflow-x-auto pb-4 no-scrollbar border-b border-border">
           {[
             { value: 'language', label: 'Language 语言', icon: Languages },
             { value: 'hsk1', label: 'HSK 1 Lab 实验室', icon: Book },
@@ -635,9 +635,9 @@ export default function Learn() {
             <TabsTrigger 
               key={tab.value}
               value={tab.value} 
-              className="rounded-full px-10 py-4 data-[state=active]:bg-primary data-[state=active]:text-white border border-border transition-all font-serif italic text-xl"
+              className="rounded-full px-6 sm:px-10 py-3 sm:py-4 data-[state=active]:bg-primary data-[state=active]:text-white border border-border transition-all font-serif italic text-lg sm:text-xl whitespace-nowrap"
             >
-              <tab.icon className="mr-3 h-5 w-5" /> {tab.label}
+              <tab.icon className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" /> {tab.label}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -645,21 +645,21 @@ export default function Learn() {
         <AnimatePresence mode="wait">
           {/* Language Games */}
           <TabsContent key="language" value="language" className="outline-none">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
               <div className="lg:col-span-2">
-                <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
-                  <div className="bg-foreground text-background p-12">
-                    <div className="flex justify-between items-center mb-8">
+                <Card className="rounded-[2rem] sm:rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
+                  <div className="bg-foreground text-background p-8 sm:p-12">
+                    <div className="flex justify-between items-center mb-6 sm:mb-8">
                       <Badge className="bg-primary text-white rounded-full px-4 py-1 font-serif italic">Tone Master</Badge>
                       <div className="flex items-center space-x-3 text-muted-foreground">
                         <Timer className="h-5 w-5" />
-                        <span className="text-xs font-bold uppercase tracking-[0.2em]">Quick Challenge</span>
+                        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em]">Quick Challenge</span>
                       </div>
                     </div>
-                    <h3 className="text-4xl font-serif font-bold tracking-tight">Identify the Tone 辨别声调</h3>
-                    <p className="text-muted-foreground text-xl font-serif italic mt-4">Listen to the word and pick the correct tone mark (1-4).</p>
+                    <h3 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight">Identify the Tone 辨别声调</h3>
+                    <p className="text-muted-foreground text-lg sm:text-xl font-serif italic mt-4">Listen to the word and pick the correct tone mark (1-4).</p>
                   </div>
-                  <CardContent className="p-12">
+                  <CardContent className="p-8 sm:p-12">
                     <ToneMaster />
                   </CardContent>
                 </Card>
@@ -704,16 +704,16 @@ export default function Learn() {
           {/* HSK 1 Lab */}
           <TabsContent key="hsk1" value="hsk1" className="outline-none">
             <div className="max-w-4xl mx-auto">
-              <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
-                <div className="bg-foreground text-background p-12">
-                  <div className="flex justify-between items-center mb-8">
+              <Card className="rounded-[2rem] sm:rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
+                <div className="bg-foreground text-background p-8 sm:p-12">
+                  <div className="flex justify-between items-center mb-6 sm:mb-8">
                     <Badge className="bg-primary text-white rounded-full px-4 py-1 font-serif italic">Flashcards</Badge>
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Vocabulary Lab</span>
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Vocabulary Lab</span>
                   </div>
-                  <h3 className="text-5xl font-serif font-bold tracking-tight">HSK 1 Master List 词汇表</h3>
-                  <p className="text-muted-foreground text-xl font-serif italic mt-4">Flip through 150+ essential HSK 1 characters and master their meanings.</p>
+                  <h3 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight">HSK 1 Master List 词汇表</h3>
+                  <p className="text-muted-foreground text-lg sm:text-xl font-serif italic mt-4">Flip through 150+ essential HSK 1 characters and master their meanings.</p>
                 </div>
-                <CardContent className="p-12">
+                <CardContent className="p-8 sm:p-12">
                   <FlashcardLab />
                 </CardContent>
               </Card>
@@ -723,16 +723,16 @@ export default function Learn() {
           {/* History Games */}
           <TabsContent key="history" value="history" className="outline-none">
             <div className="max-w-4xl mx-auto">
-              <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
-                <div className="bg-foreground text-background p-12">
-                  <div className="flex justify-between items-center mb-8">
+              <Card className="rounded-[2rem] sm:rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
+                <div className="bg-foreground text-background p-8 sm:p-12">
+                  <div className="flex justify-between items-center mb-6 sm:mb-8">
                     <Badge className="bg-primary text-white rounded-full px-4 py-1 font-serif italic">Chronology</Badge>
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">History Challenge</span>
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">History Challenge</span>
                   </div>
-                  <h3 className="text-5xl font-serif font-bold tracking-tight">Dynasty Timeline 朝代时间轴</h3>
-                  <p className="text-muted-foreground text-xl font-serif italic mt-4">Order the major dynasties of Imperial China from earliest to latest.</p>
+                  <h3 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight">Dynasty Timeline 朝代时间轴</h3>
+                  <p className="text-muted-foreground text-lg sm:text-xl font-serif italic mt-4">Order the major dynasties of Imperial China from earliest to latest.</p>
                 </div>
-                <CardContent className="p-12">
+                <CardContent className="p-8 sm:p-12">
                   <DynastySorter />
                 </CardContent>
               </Card>
@@ -742,46 +742,46 @@ export default function Learn() {
           {/* Culture Games */}
           <TabsContent key="culture" value="culture" className="outline-none">
             <div className="max-w-2xl mx-auto">
-              <Card className="rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
-                <div className="bg-primary text-white p-12">
+              <Card className="rounded-[2rem] sm:rounded-[3rem] border-none shadow-2xl overflow-hidden bg-card">
+                <div className="bg-primary text-white p-8 sm:p-12">
                   <div className="flex justify-between items-center mb-6">
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] opacity-80">Question {quizIndex + 1} of {quizData.length}</span>
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] opacity-80">Question {quizIndex + 1} of {quizData.length}</span>
                     <Badge variant="secondary" className="bg-white/20 text-white border-none font-serif italic">Culture Quiz</Badge>
                   </div>
-                  <h3 className="text-4xl font-serif font-bold leading-tight tracking-tight">
+                  <h3 className="text-3xl sm:text-4xl font-serif font-bold leading-tight tracking-tight">
                     {quizStatus === 'playing' ? quizData[quizIndex].question : 'Quiz Completed!'}
                   </h3>
                 </div>
-                <CardContent className="p-12">
+                <CardContent className="p-8 sm:p-12">
                   {quizStatus === 'playing' ? (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                       {quizData[quizIndex].options.map((option) => (
                         <Button
                           key={option}
                           variant="outline"
-                          className="w-full h-24 justify-between px-10 text-xl font-serif italic rounded-3xl border-2 border-border hover:border-primary hover:bg-primary/5 group transition-all"
+                          className="w-full h-20 sm:h-24 justify-between px-6 sm:px-10 text-lg sm:text-xl font-serif italic rounded-[1.5rem] sm:rounded-3xl border-2 border-border hover:border-primary hover:bg-primary/5 group transition-all"
                           onClick={() => handleQuizAnswer(option)}
                         >
-                          {option}
-                          <ChevronRight className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-2" />
+                          <span className="truncate">{option}</span>
+                          <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-2 shrink-0" />
                         </Button>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center space-y-10 py-12">
+                    <div className="text-center space-y-8 sm:space-y-10 py-8 sm:py-12">
                       <div className="relative inline-block">
-                        <Trophy className="h-40 w-40 text-primary mx-auto" />
+                        <Trophy className="h-32 w-32 sm:h-40 sm:w-40 text-primary mx-auto" />
                         <motion.div 
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="absolute -top-4 -right-4 bg-foreground text-background w-16 h-16 rounded-full flex items-center justify-center font-serif font-bold text-2xl border-4 border-card shadow-xl"
+                          className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-foreground text-background w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-serif font-bold text-xl sm:text-2xl border-4 border-card shadow-xl"
                         >
                           {quizScore}
                         </motion.div>
                       </div>
-                      <div className="space-y-4">
-                        <h3 className="text-4xl font-serif font-bold italic">Excellent Work! 太棒了!</h3>
-                        <p className="text-xl font-serif italic text-muted-foreground">You've mastered the basics of Chinese culture.</p>
+                      <div className="space-y-3 sm:space-y-4">
+                        <h3 className="text-3xl sm:text-4xl font-serif font-bold italic">Excellent Work! 太棒了!</h3>
+                        <p className="text-lg sm:text-xl font-serif italic text-muted-foreground">You've mastered the basics of Chinese culture.</p>
                       </div>
                       <Button 
                         onClick={() => {
@@ -789,9 +789,9 @@ export default function Learn() {
                           setQuizScore(0);
                           setQuizStatus('playing');
                         }}
-                        className="bg-primary hover:bg-primary/90 text-white rounded-full px-16 py-8 text-xl font-serif italic shadow-xl shadow-primary/20"
+                        className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-full px-10 sm:px-16 py-6 sm:py-8 text-lg sm:text-xl font-serif italic shadow-xl shadow-primary/20"
                       >
-                        <RotateCcw className="mr-3 h-6 w-6" /> Restart Quiz 重新开始
+                        <RotateCcw className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" /> Restart Quiz 重新开始
                       </Button>
                     </div>
                   )}

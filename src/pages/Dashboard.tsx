@@ -320,39 +320,39 @@ export default function Dashboard() {
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col lg:flex-row gap-12 mb-20 items-start"
+        className="flex flex-col lg:flex-row gap-8 sm:gap-12 mb-12 sm:mb-20 items-center lg:items-start text-center lg:text-left"
       >
         <div className="relative group">
           <motion.div 
             whileHover={{ scale: 1.02 }}
-            className="h-64 w-64 rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-border"
+            className="h-48 w-48 sm:h-64 sm:w-64 rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-border"
           >
             <Avatar className="h-full w-full rounded-none">
               <AvatarImage src={profile?.avatar_url} className="object-cover" />
               <AvatarFallback className="text-4xl font-serif bg-muted text-primary">{profile?.full_name?.charAt(0)}</AvatarFallback>
             </Avatar>
           </motion.div>
-          <div className="absolute -bottom-4 -right-4 bg-primary text-white px-4 py-2 rounded-xl font-serif italic text-sm shadow-lg flex items-center">
+          <div className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 bg-primary text-white px-3 py-1 sm:px-4 sm:py-2 rounded-xl font-serif italic text-xs sm:text-sm shadow-lg flex items-center">
             {profile?.role === 'admin' ? (
-              <><Award className="mr-2 h-4 w-4" /> ADMIN 管理员</>
+              <><Award className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> ADMIN 管理员</>
             ) : profile?.role === 'blogger' ? (
-              <><Edit3 className="mr-2 h-4 w-4" /> BLOGGER 博主</>
+              <><Edit3 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> BLOGGER 博主</>
             ) : (
-              <><BookOpen className="mr-2 h-4 w-4" /> READER 读者</>
+              <><BookOpen className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> READER 读者</>
             )}
           </div>
         </div>
 
-        <div className="flex-grow space-y-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex-grow space-y-4 sm:space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
             <div>
-              <h1 className="text-6xl font-serif font-bold tracking-tight text-foreground">
-                {profile?.full_name} <span className="font-normal text-muted-foreground ml-2">{profile?.role === 'admin' ? '管理员' : profile?.role === 'blogger' ? '博主' : '读者'}</span>
+              <h1 className="text-4xl sm:text-6xl font-serif font-bold tracking-tight text-foreground">
+                {profile?.full_name} <span className="block sm:inline font-normal text-muted-foreground sm:ml-2 text-2xl sm:text-4xl">{profile?.role === 'admin' ? '管理员' : profile?.role === 'blogger' ? '博主' : '读者'}</span>
               </h1>
-              <p className="text-2xl font-serif text-muted-foreground mt-4 max-w-2xl leading-relaxed">
+              <p className="text-lg sm:text-2xl font-serif text-muted-foreground mt-4 max-w-2xl leading-relaxed">
                 {profile?.bio || 'No bio provided yet.'}
               </p>
-              <p className="text-primary font-serif italic text-lg mt-2">
+              <p className="text-primary font-serif italic text-base sm:text-lg mt-2">
                 {profile?.bio_zh || '尚未提供简介。'}
               </p>
             </div>
@@ -373,15 +373,15 @@ export default function Dashboard() {
           { label: isBlogger ? 'My Posts' : 'Join Date', zh: isBlogger ? '我的文章' : '加入日期', value: isBlogger ? stats.myPostsCount : (profile?.created_at ? new Date(profile.created_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : 'N/A'), icon: isBlogger ? Edit3 : Calendar, color: 'bg-blue-50 text-blue-600 dark:bg-blue-950/30' },
         ].map((stat, i) => (
           <motion.div key={i} variants={itemVariants}>
-            <Card className="rounded-[2.5rem] border-none shadow-sm bg-card hover:shadow-xl transition-all duration-500 group overflow-hidden">
-              <CardContent className="p-8 flex items-center space-x-6">
-                <div className={`p-4 rounded-2xl ${stat.color} group-hover:scale-110 transition-transform duration-500`}>
-                  <stat.icon className="h-8 w-8" />
+            <Card className="rounded-[2rem] sm:rounded-[2.5rem] border-none shadow-sm bg-card hover:shadow-xl transition-all duration-500 group overflow-hidden">
+              <CardContent className="p-6 sm:p-8 flex items-center space-x-4 sm:space-x-6">
+                <div className={`p-3 sm:p-4 rounded-2xl ${stat.color} group-hover:scale-110 transition-transform duration-500`}>
+                  <stat.icon className="h-6 w-6 sm:h-8 sm:w-8" />
                 </div>
                 <div>
-                  <div className="text-4xl font-serif font-bold italic">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground uppercase tracking-widest font-medium mt-1">
-                    {stat.label} <span className="font-normal">{stat.zh}</span>
+                  <div className="text-2xl sm:text-4xl font-serif font-bold italic">{stat.value}</div>
+                  <div className="text-[10px] sm:text-sm text-muted-foreground uppercase tracking-widest font-medium mt-1">
+                    {stat.label} <span className="hidden sm:inline font-normal">{stat.zh}</span>
                   </div>
                 </div>
               </CardContent>
@@ -391,7 +391,7 @@ export default function Dashboard() {
       </motion.div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-12 mt-10">
-        <TabsList className="bg-transparent border-none p-0 h-auto flex-wrap justify-start gap-4">
+        <TabsList className="bg-transparent border-none p-0 h-auto flex flex-wrap justify-start gap-2 sm:gap-4">
           {[
             { value: 'overview', label: 'Overview', icon: LayoutDashboard },
             { value: 'my-posts', label: 'My Posts', icon: BookOpen, condition: isBlogger },
@@ -403,7 +403,7 @@ export default function Dashboard() {
               <TabsTrigger 
                 key={tab.value}
                 value={tab.value} 
-                className="rounded-full px-8 py-3 border border-border data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:border-primary transition-all font-serif italic text-lg"
+                className="rounded-full px-4 sm:px-8 py-2 sm:py-3 border border-border data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:border-primary transition-all font-serif italic text-base sm:text-lg"
               >
                 <tab.icon className="mr-2 h-4 w-4" /> {tab.label}
               </TabsTrigger>
@@ -424,8 +424,8 @@ export default function Dashboard() {
                 <h2 className="text-3xl font-serif font-bold">Engagement Analytics 参与度分析</h2>
                 <div className="h-px w-12 bg-border" />
               </div>
-              <Card className="rounded-[3rem] border-none shadow-sm bg-card p-12">
-                <div className="h-[300px] w-full">
+              <Card className="rounded-[2rem] sm:rounded-[3rem] border-none shadow-sm bg-card p-6 sm:p-12">
+                <div className="h-[250px] sm:h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData}>
                       <defs>
@@ -688,16 +688,16 @@ export default function Dashboard() {
           </TabsContent>
 
           <TabsContent key="edit-profile" value="edit-profile" className="outline-none">
-            <Card className="rounded-[3rem] border-none shadow-sm bg-card p-12">
-              <div className="mb-12">
-                <h2 className="text-4xl font-serif font-bold">Edit Profile 编辑个人资料</h2>
+            <Card className="rounded-[2rem] sm:rounded-[3rem] border-none shadow-sm bg-card p-6 sm:p-12">
+              <div className="mb-8 sm:mb-12">
+                <h2 className="text-3xl sm:text-4xl font-serif font-bold">Edit Profile 编辑个人资料</h2>
                 <p className="text-muted-foreground mt-2 font-serif italic">Update your public identity and account details.</p>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-                <div className="flex flex-col items-center space-y-8 p-10 bg-muted/30 rounded-[3rem] border border-border">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-16">
+                <div className="flex flex-col items-center space-y-6 sm:space-y-8 p-6 sm:p-10 bg-muted/30 rounded-[2rem] sm:rounded-[3rem] border border-border">
                   <div className="relative group">
-                    <Avatar className="h-40 w-40 border-8 border-background shadow-2xl">
+                    <Avatar className="h-32 w-32 sm:h-40 sm:w-40 border-8 border-background shadow-2xl">
                       <AvatarImage src={avatarUrl} className="object-cover" />
                       <AvatarFallback className="text-4xl font-serif">{fullName?.charAt(0)}</AvatarFallback>
                     </Avatar>
@@ -718,25 +718,25 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                  <div className="lg:col-span-2 space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                       <div className="space-y-3">
-                        <Label htmlFor="full_name" className="font-serif italic text-lg">Full Name 姓名</Label>
+                        <Label htmlFor="full_name" className="font-serif italic text-base sm:text-lg">Full Name 姓名</Label>
                         <Input 
                           id="full_name" 
                           value={fullName} 
                           onChange={(e) => setFullName(e.target.value)}
-                          className="rounded-2xl h-14 bg-muted/50 border-none focus:bg-background transition-colors"
+                          className="rounded-2xl h-12 sm:h-14 bg-muted/50 border-none focus:bg-background transition-colors"
                         />
                       </div>
                       <div className="space-y-3">
-                        <Label htmlFor="email" className="font-serif italic text-lg">Email 邮箱</Label>
-                        <Input id="email" defaultValue={profile?.email} disabled className="rounded-2xl h-14 bg-muted/50 border-none opacity-50" />
+                        <Label htmlFor="email" className="font-serif italic text-base sm:text-lg">Email 邮箱</Label>
+                        <Input id="email" defaultValue={profile?.email} disabled className="rounded-2xl h-12 sm:h-14 bg-muted/50 border-none opacity-50" />
                       </div>
                     </div>
                     
                     <div className="space-y-3">
-                      <Label htmlFor="bio" className="font-serif italic text-lg">Bio 个人简介 (English)</Label>
+                      <Label htmlFor="bio" className="font-serif italic text-base sm:text-lg">Bio 个人简介 (English)</Label>
                       <textarea 
                         id="bio"
                         value={bio}
@@ -747,7 +747,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="bio_zh" className="font-serif italic text-lg">Bio 个人简介 (Chinese)</Label>
+                      <Label htmlFor="bio_zh" className="font-serif italic text-base sm:text-lg">Bio 个人简介 (Chinese)</Label>
                       <textarea 
                         id="bio_zh"
                         value={bioZh}
@@ -758,19 +758,19 @@ export default function Dashboard() {
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="avatar" className="font-serif italic text-lg">Avatar URL 头像链接</Label>
+                      <Label htmlFor="avatar" className="font-serif italic text-base sm:text-lg">Avatar URL 头像链接</Label>
                       <Input 
                         id="avatar" 
                         value={avatarUrl} 
                         onChange={(e) => setAvatarUrl(e.target.value)}
                         placeholder="https://..." 
-                        className="rounded-2xl h-14 bg-muted/50 border-none focus:bg-background transition-colors"
+                        className="rounded-2xl h-12 sm:h-14 bg-muted/50 border-none focus:bg-background transition-colors"
                       />
                     </div>
                   
-                  <div className="pt-8">
+                  <div className="pt-4 sm:pt-8">
                     <Button 
-                      className="bg-primary hover:bg-primary/90 text-white rounded-2xl px-12 py-8 text-xl font-serif italic shadow-xl shadow-primary/20" 
+                      className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-2xl px-12 py-6 sm:py-8 text-lg sm:text-xl font-serif italic shadow-xl shadow-primary/20" 
                       onClick={handleUpdateProfile}
                       disabled={updating}
                     >

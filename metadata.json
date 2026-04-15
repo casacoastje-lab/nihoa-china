@@ -1,5 +1,5 @@
 {
-  "name": "Nihao Community",
-  "description": "A community platform for visitors to China featuring blogs, interactive maps, cultural learning games, and volunteer programs.",
+  "name": "ChinaVerse",
+  "description": "An immersive community platform for exploring China, featuring AI-powered storytelling, interactive maps, cultural learning games, and a vibrant gallery.",
   "requestFramePermissions": ["geolocation"]
 }

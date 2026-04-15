@@ -4,12 +4,24 @@ import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Badge } from '@/src/components/ui/badge';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
-import { MapPin, Search, Navigation, Info, Layers, Filter, Globe, Star } from 'lucide-react';
+import { MapPin, Search, Navigation, Info, Layers, Filter, Globe, Star, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import AMapLoader from '@amap/amap-jsapi-loader';
 import { supabase } from '@/src/lib/supabase';
-import { Landmark } from '@/src/types';
+import { cn } from '@/src/lib/utils';
 import { toast } from 'sonner';
+
+interface Landmark {
+  id: string;
+  name: string;
+  name_zh: string;
+  province: string;
+  description: string;
+  category: string;
+  lat: number;
+  lng: number;
+  image_url: string;
+}
 
 const categories = ['All', 'History', 'Landmark', 'Nature', 'Art', 'Culture', 'Food', 'Architecture'];
 
@@ -55,7 +67,21 @@ export default function MapPage() {
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) setIsSidebarOpen(false);
+      else setIsSidebarOpen(true);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   const mapRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<any[]>([]);
@@ -192,12 +218,30 @@ export default function MapPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-64px)] flex flex-col md:flex-row overflow-hidden bg-background">
+    <div className="h-[calc(100vh-64px)] flex flex-col md:flex-row overflow-hidden bg-background relative">
+      {/* Sidebar Toggle (Mobile) */}
+      {isMobile && (
+        <Button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="absolute top-4 left-4 z-30 rounded-full shadow-lg bg-background/80 backdrop-blur-md border border-border text-foreground hover:bg-background"
+          size="icon"
+        >
+          {isSidebarOpen ? <XCircle className="h-5 w-5" /> : <Filter className="h-5 w-5" />}
+        </Button>
+      )}
+
       {/* Sidebar */}
       <motion.div 
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        className="w-full md:w-[380px] bg-card border-r border-border flex flex-col z-10 shadow-2xl"
+        initial={false}
+        animate={{ 
+          x: isSidebarOpen ? 0 : (isMobile ? -window.innerWidth : -380),
+          width: isMobile ? '100%' : 380
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className={cn(
+          "bg-card border-r border-border flex flex-col z-20 shadow-2xl absolute md:relative h-full",
+          !isSidebarOpen && !isMobile && "md:w-0 md:min-w-0 overflow-hidden border-none"
+        )}
       >
         <div className="p-3 space-y-3 border-b border-border">
           <div className="space-y-0.5">
@@ -306,41 +350,41 @@ export default function MapPage() {
               key={selectedLandmark.id}
               onMouseEnter={handlePopupMouseEnter}
               onMouseLeave={handleMouseLeave}
-              className="absolute bottom-12 left-12 right-12 md:right-auto md:w-[450px] z-10"
+              className="absolute bottom-4 left-4 right-4 md:bottom-12 md:left-12 md:right-auto md:w-[450px] z-10"
             >
-              <Card className="rounded-[3.5rem] overflow-hidden shadow-2xl border-none bg-card">
-                <div className="relative h-64 overflow-hidden group">
+              <Card className="rounded-[2rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl border-none bg-card">
+                <div className="relative h-48 md:h-64 overflow-hidden group">
                   <img src={selectedLandmark.image_url} alt={selectedLandmark.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
-                  <Button size="icon" variant="secondary" className="absolute top-6 right-6 rounded-full bg-background/80 backdrop-blur-md hover:bg-background">
+                  <Button size="icon" variant="secondary" className="absolute top-4 right-4 md:top-6 md:right-6 rounded-full bg-background/80 backdrop-blur-md hover:bg-background">
                     <Info size={20} className="text-primary" />
                   </Button>
-                  <div className="absolute bottom-6 left-8">
-                    <Badge className="bg-primary text-white border-none font-serif italic px-4 py-1">{selectedLandmark.category}</Badge>
+                  <div className="absolute bottom-4 left-6 md:bottom-6 md:left-8">
+                    <Badge className="bg-primary text-white border-none font-serif italic px-3 py-0.5 md:px-4 md:py-1 text-[10px] md:text-sm">{selectedLandmark.category}</Badge>
                   </div>
                 </div>
-                <CardContent className="p-10 space-y-6">
-                  <div className="space-y-2">
+                <CardContent className="p-6 md:p-10 space-y-4 md:space-y-6">
+                  <div className="space-y-1 md:space-y-2">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-4xl font-serif font-bold tracking-tight">{selectedLandmark.name}</h3>
-                      <span className="text-sm font-serif italic text-muted-foreground flex items-center">
-                        <Globe className="mr-2 h-4 w-4 text-primary" /> {selectedLandmark.province}
+                      <h3 className="text-2xl md:text-4xl font-serif font-bold tracking-tight">{selectedLandmark.name}</h3>
+                      <span className="text-[10px] md:text-sm font-serif italic text-muted-foreground flex items-center">
+                        <Globe className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4 text-primary" /> {selectedLandmark.province}
                       </span>
                     </div>
-                    <p className="text-2xl text-primary font-serif font-bold italic">{selectedLandmark.name_zh}</p>
+                    <p className="text-lg md:text-2xl text-primary font-serif font-bold italic">{selectedLandmark.name_zh}</p>
                   </div>
-                  <p className="text-lg text-muted-foreground font-serif italic leading-relaxed">
+                  <p className="text-sm md:text-lg text-muted-foreground font-serif italic leading-relaxed line-clamp-3 md:line-clamp-none">
                     {selectedLandmark.description}
                   </p>
-                  <div className="flex gap-4 pt-4">
+                  <div className="flex gap-3 md:gap-4 pt-2 md:pt-4">
                     <Button 
-                      className="flex-grow bg-foreground text-background hover:bg-foreground/90 rounded-full h-16 text-xl font-serif italic shadow-xl"
+                      className="flex-grow bg-foreground text-background hover:bg-foreground/90 rounded-full h-12 md:h-16 text-lg md:text-xl font-serif italic shadow-xl"
                       onClick={handleOpenInAmap}
                     >
                       Get Directions 路线
                     </Button>
-                    <Button variant="outline" className="rounded-full h-16 w-16 p-0 border-border hover:border-primary hover:text-primary transition-all">
-                      <Star className="h-6 w-6" />
+                    <Button variant="outline" className="rounded-full h-12 w-12 md:h-16 md:w-16 p-0 border-border hover:border-primary hover:text-primary transition-all">
+                      <Star className="h-5 w-5 md:h-6 md:w-6" />
                     </Button>
                   </div>
                 </CardContent>
