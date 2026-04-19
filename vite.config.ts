@@ -6,6 +6,7 @@ import {defineConfig, loadEnv} from 'vite';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
+    base: process.env.NODE_ENV === 'production' ? './' : '/',
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.ZHIPU_API_KEY': JSON.stringify(env.ZHIPU_API_KEY || process.env.ZHIPU_API_KEY),
