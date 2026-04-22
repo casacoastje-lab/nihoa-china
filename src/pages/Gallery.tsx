@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
 import { Badge } from '@/src/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/src/components/ui/dialog';
-import { Search, Image as ImageIcon, Info, Calendar, MapPin, X } from 'lucide-react';
+import { Search, Image as ImageIcon, Info, Calendar, MapPin, X, Download } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
 
 const galleryItems = [
@@ -82,6 +82,24 @@ export default function Gallery() {
     (item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
      item.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${filename.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error downloading:', error);
+      window.open(url, '_blank');
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -186,7 +204,7 @@ export default function Gallery() {
       )}
 
       <Dialog open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
-        <DialogContent className="max-w-6xl p-0 overflow-hidden rounded-[2rem] sm:rounded-[4rem] border-none bg-card shadow-2xl w-[95vw] sm:w-full">
+        <DialogContent showCloseButton={false} className="max-w-[1200px] p-0 overflow-hidden rounded-[2rem] sm:rounded-[4rem] border-none bg-card shadow-2xl w-[95vw] lg:w-[90vw]">
           {selectedItem && (
             <div className="flex flex-col lg:flex-row h-full max-h-[90vh]">
               <div className="lg:w-3/5 relative overflow-hidden aspect-video lg:aspect-auto">
@@ -233,12 +251,12 @@ export default function Gallery() {
                   </div>
                 </div>
 
-                <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border flex gap-4 sm:gap-6">
-                  <Button className="flex-grow bg-primary hover:bg-primary/90 text-white rounded-full h-14 sm:h-16 text-lg sm:text-xl font-serif italic shadow-xl shadow-primary/20">
-                    Share Moment 分享
-                  </Button>
-                  <Button variant="outline" className="rounded-full h-14 w-14 sm:h-16 sm:w-16 p-0 border-border hover:border-primary hover:text-primary transition-all">
-                    <ImageIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+                <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border flex">
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary/90 text-white rounded-full h-14 sm:h-16 text-lg sm:text-xl font-serif italic shadow-xl shadow-primary/20 gap-3"
+                    onClick={() => handleDownload(selectedItem.image, selectedItem.title)}
+                  >
+                    <Download className="h-5 w-5 sm:h-6 sm:w-6" /> Download Picture 下载图片
                   </Button>
                 </div>
               </div>

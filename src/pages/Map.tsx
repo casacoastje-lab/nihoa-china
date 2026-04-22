@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Badge } from '@/src/components/ui/badge';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
-import { MapPin, Search, Navigation, Info, Layers, Filter, Globe, Star, XCircle } from 'lucide-react';
+import { MapPin, Search, Navigation, Info, Layers, Filter, Globe, Star, XCircle, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import AMapLoader from '@amap/amap-jsapi-loader';
 import { supabase } from '@/src/lib/supabase';
@@ -62,6 +63,7 @@ const sampleLandmarks: Landmark[] = [
 ];
 
 export default function MapPage() {
+  const navigate = useNavigate();
   const [landmarks, setLandmarks] = useState<Landmark[]>([]);
   const [selectedLandmark, setSelectedLandmark] = useState<Landmark | null>(null);
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -82,6 +84,31 @@ export default function MapPage() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Hide the global navbar on mobile when the sidebar is open to prevent overlap
+  useEffect(() => {
+    const navbar = document.querySelector('nav');
+    if (navbar) {
+      if (isMobile && isSidebarOpen) {
+        navbar.style.opacity = '0';
+        navbar.style.pointerEvents = 'none';
+        navbar.style.transform = 'translateY(-100%)';
+      } else {
+        navbar.style.opacity = '1';
+        navbar.style.pointerEvents = 'auto';
+        navbar.style.transform = 'translateY(0)';
+      }
+    }
+    // Cleanup on unmount
+    return () => {
+      if (navbar) {
+        navbar.style.opacity = '1';
+        navbar.style.pointerEvents = 'auto';
+        navbar.style.transform = 'translateY(0)';
+      }
+    };
+  }, [isMobile, isSidebarOpen]);
+
   const mapRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<any[]>([]);
@@ -223,7 +250,10 @@ export default function MapPage() {
       {isMobile && (
         <Button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="absolute top-4 left-4 z-30 rounded-full shadow-lg bg-background/80 backdrop-blur-md border border-border text-foreground hover:bg-background"
+          className={cn(
+            "absolute left-4 z-30 rounded-full shadow-lg bg-background/80 backdrop-blur-md border border-border text-foreground hover:bg-background transition-all duration-500",
+            isSidebarOpen ? "top-4" : "top-20" // Move button down when navbar is visible
+          )}
           size="icon"
         >
           {isSidebarOpen ? <XCircle className="h-5 w-5" /> : <Filter className="h-5 w-5" />}
@@ -289,6 +319,10 @@ export default function MapPage() {
                 whileHover={{ x: 5 }}
                 onMouseEnter={() => handleMouseEnter(l)}
                 onMouseLeave={handleMouseLeave}
+                onClick={() => {
+                  setSelectedLandmark(l);
+                  if (isMobile) setIsSidebarOpen(false);
+                }}
                 className={`p-3 rounded-[1.5rem] cursor-pointer transition-all border-2 ${selectedLandmark?.id === l.id ? 'bg-primary/5 border-primary shadow-lg shadow-primary/5' : 'bg-card border-border hover:border-primary/30'}`}
               >
                 <div className="flex items-start space-x-3">
@@ -378,13 +412,17 @@ export default function MapPage() {
                   </p>
                   <div className="flex gap-3 md:gap-4 pt-2 md:pt-4">
                     <Button 
-                      className="flex-grow bg-foreground text-background hover:bg-foreground/90 rounded-full h-12 md:h-16 text-lg md:text-xl font-serif italic shadow-xl"
+                      className="flex-grow overflow-hidden bg-foreground text-background hover:bg-foreground/90 rounded-full h-12 md:h-14 text-sm md:text-base font-serif italic shadow-xl shrink"
                       onClick={handleOpenInAmap}
                     >
-                      Get Directions 路线
+                      <Navigation className="mr-2 h-4 w-4 md:h-5 md:w-5 shrink-0" /> <span className="truncate">Navigate 导航</span>
                     </Button>
-                    <Button variant="outline" className="rounded-full h-12 w-12 md:h-16 md:w-16 p-0 border-border hover:border-primary hover:text-primary transition-all">
-                      <Star className="h-5 w-5 md:h-6 md:w-6" />
+                    <Button 
+                      variant="outline" 
+                      className="flex-grow overflow-hidden rounded-full h-12 md:h-14 text-sm md:text-base font-serif italic border-border hover:border-primary hover:text-primary transition-all shrink"
+                      onClick={() => navigate(`/blog?q=${encodeURIComponent(selectedLandmark.name)}`)}
+                    >
+                      <BookOpen className="mr-2 h-4 w-4 md:h-5 md:w-5 shrink-0" /> <span className="truncate">Stories 故事</span>
                     </Button>
                   </div>
                 </CardContent>

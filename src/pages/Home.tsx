@@ -74,19 +74,19 @@ export default function Home() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="mb-12 inline-block"
+            className="mb-8 mt-12 sm:mb-12 inline-block max-w-[90vw]"
           >
-            <span className="px-6 py-2 rounded-full border border-white/30 backdrop-blur-md text-white font-serif italic text-lg tracking-widest uppercase">
+            <span className="block w-full whitespace-normal sm:whitespace-nowrap px-4 sm:px-6 py-2 sm:py-2 rounded-full sm:rounded-full border border-white/30 backdrop-blur-md text-white font-serif italic text-xs sm:text-sm md:text-lg tracking-wider sm:tracking-widest uppercase leading-snug">
               The Living Scroll • 活着的长卷
             </span>
           </motion.div>
           
-          <h1 className="text-5xl sm:text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-none mb-12 sm:mb-16">
+          <h1 className="text-4xl sm:text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-[1.1] sm:leading-none mb-8 sm:mb-16">
             ChinaVerse <br />
             <span className="text-primary italic">中华宇宙</span>
           </h1>
           
-          <p className="text-lg sm:text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-12 sm:mb-20">
+          <p className="text-base sm:text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-8 sm:mb-20">
             "A digital sanctuary for the timeless spirit of China. Preserving the past, architecting the future."
           </p>
 
@@ -95,16 +95,16 @@ export default function Home() {
               to="/learn" 
               className={buttonVariants({ 
                 size: "lg", 
-                className: "w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-full px-10 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-serif italic shadow-2xl shadow-primary/40 group" 
+                className: "w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-full px-6 sm:px-12 py-6 sm:py-8 text-base sm:text-xl font-serif italic shadow-2xl shadow-primary/40 group whitespace-nowrap" 
               })}
             >
-              Begin the Journey 开启旅程
+              Begin the Journey <span className="hidden sm:inline">开启旅程</span>
               <motion.span 
                 animate={{ x: [0, 5, 0] }} 
                 transition={{ repeat: Infinity, duration: 1.5 }}
-                className="ml-3"
+                className="ml-2 sm:ml-3 shrink-0"
               >
-                <ArrowRight />
+                <ArrowRight className="h-5 w-5" />
               </motion.span>
             </Link>
             <Link 
@@ -112,10 +112,10 @@ export default function Home() {
               className={buttonVariants({ 
                 variant: "outline",
                 size: "lg", 
-                className: "w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-md rounded-full px-10 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-serif italic" 
+                className: "w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-md rounded-full px-6 sm:px-12 py-6 sm:py-8 text-base sm:text-xl font-serif italic whitespace-nowrap" 
               })}
             >
-              Explore Map 探索地图
+              Explore Map <span className="hidden sm:inline">探索地图</span>
             </Link>
           </div>
         </motion.div>

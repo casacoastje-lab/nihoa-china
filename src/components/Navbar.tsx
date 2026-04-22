@@ -129,11 +129,14 @@ export default function Navbar() {
               <Button 
                 onClick={() => navigate('/auth')} 
                 className={cn(
-                  "bg-primary hover:bg-primary/90 text-white rounded-full font-serif italic transition-all",
-                  isMapPage ? "px-4 py-2 text-xs h-8" : "px-8 py-6 text-base"
+                  "bg-primary hover:bg-primary/90 text-white rounded-full font-serif italic transition-all shrink-0 flex items-center justify-center",
+                  isMapPage 
+                    ? "px-3 py-1.5 text-xs h-7 sm:px-6 sm:h-9 sm:text-sm" 
+                    : "px-4 h-9 text-sm sm:px-8 sm:h-11 sm:text-base md:px-12 md:h-12 md:text-lg"
                 )}
               >
-                {isMapPage ? "Join" : "Join the Scroll"}
+                <span className="hidden sm:inline">Join our community</span>
+                <span className="sm:hidden">Join</span>
               </Button>
             )}
             
@@ -176,7 +179,7 @@ export default function Navbar() {
                   }} 
                   className="w-full bg-primary text-white rounded-full py-6 text-lg font-serif italic"
                 >
-                  Join the Scroll
+                  Join our community
                 </Button>
               )}
             </div>
