@@ -345,7 +345,7 @@ export default function Dashboard() {
       return;
     }
     
-    console.log('Sync button clicked. Admin status:', { isAdmin, isEmailAdmin });
+    console.log('Sync button clicked. Admin status:', { isAdmin });
     const confirm = window.confirm("This will PERMANENTLY REPLACE all database landmarks with your new high-quality images and data. Continue?");
     if (!confirm) return;
 

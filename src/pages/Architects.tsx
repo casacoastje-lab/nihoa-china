@@ -100,7 +100,7 @@ const architects = [
     achievement: 'Site-Specific Innovators',
     description: 'Focused on genuine, site-specific, and constructive approaches to architectural reality, valuing the authenticity of space over pure form.',
     projects: ['Dingli Art Museum', 'Qinglongwu Capsule Hotel and Bookstore'],
-    image: 'https://images.unsplash.com/photo-1498036882173-b41c28af5c01?auto=format&fit=crop&q=80&w=800'
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Fan%20Beilei,%20Kong%20Rui%20&%20Xue%20Zhe.jpg'
   }
 ];
 
