@@ -11,7 +11,7 @@ import { Badge } from '@/src/components/ui/badge';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
 import { toast } from 'sonner';
 import { UserProfile, BlogPost } from '@/src/types';
-import { LayoutDashboard, BookOpen, Users, Settings, Plus, CheckCircle, XCircle, BarChart3, Clock, TrendingUp, Edit3, Award, Calendar, Quote } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, Settings, Plus, CheckCircle, XCircle, BarChart3, Clock, TrendingUp, Edit3, Award, Calendar, Quote, Globe } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -54,6 +54,7 @@ export default function Dashboard() {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'overview');
   const [myPosts, setMyPosts] = useState<BlogPost[]>([]);
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
   const [stats, setStats] = useState({
     totalStories: 0,
@@ -101,12 +102,24 @@ export default function Dashboard() {
         // Fetch User Activity (Posts & Comments)
         const { data: posts, error: postsError, count: postsCount } = await supabase
           .from('blog_posts')
-          .select('*', { count: 'exact' })
+          .select('*, profiles(full_name)')
           .eq('author_id', profile?.id)
           .order('created_at', { ascending: false });
         
         if (!postsError) {
           setMyPosts(posts || []);
+        }
+
+        // Admin: Fetch ALL posts for management
+        if (isAdmin) {
+          const { data: allP, error: allPError } = await supabase
+            .from('blog_posts')
+            .select('*, profiles(full_name)')
+            .order('created_at', { ascending: false });
+          
+          if (!allPError) {
+            setAllPosts(allP || []);
+          }
         }
         
         const { data: comments, count: commentsCount, error: commentsError } = await supabase
@@ -182,12 +195,12 @@ export default function Dashboard() {
 
         // Fetch All Users & Global Stats if Admin
         if (isAdmin) {
-          const { data: profiles, error: profilesError, count: userCount } = await supabase
+          const { data: profilesData, error: profilesError, count: userCount } = await supabase
             .from('profiles')
             .select('*', { count: 'exact' })
             .order('created_at', { ascending: false });
           if (profilesError) throw profilesError;
-          setAllUsers(profiles || []);
+          setAllUsers(profilesData || []);
           
           const { count: postCount, error: adminGlobalPostsError } = await supabase
             .from('blog_posts')
@@ -200,7 +213,7 @@ export default function Dashboard() {
           // Generate User Growth Data for Admins
           const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
           const growth = months.map((month, idx) => {
-            const count = profiles?.filter(u => new Date(u.created_at).getMonth() <= idx).length || 0;
+            const count = profilesData?.filter(u => new Date(u.created_at).getMonth() <= idx).length || 0;
             return { month, users: count };
           }).slice(0, new Date().getMonth() + 1);
           setUserGrowth(growth);
@@ -215,6 +228,31 @@ export default function Dashboard() {
 
     if (profile) fetchData();
   }, [profile, isBlogger, isAdmin]);
+
+  const handleDeletePost = async (postId: string) => {
+    const confirm = window.confirm("Are you sure you want to delete this story? This cannot be undone.");
+    if (!confirm) return;
+
+    setUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('blog_posts')
+        .delete()
+        .eq('id', postId);
+
+      if (error) throw error;
+      
+      toast.success('Story unrolled and removed.');
+      setMyPosts(prev => prev.filter(p => p.id !== postId));
+      setAllPosts(prev => prev.filter(p => p.id !== postId));
+      setStats(prev => ({ ...prev, totalStories: Math.max(0, prev.totalStories - 1) }));
+    } catch (err: any) {
+      console.error('Delete error:', err);
+      toast.error(err.message || 'Failed to delete story.');
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const handleApproveBlogger = async (userId: string) => {
     const { error } = await supabase
@@ -271,6 +309,98 @@ export default function Dashboard() {
     } catch (err: any) {
       console.error('Upload error:', err);
       toast.error(err.message || 'Failed to upload avatar');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleResetArchive = async () => {
+    if (!isAdmin) return;
+    const confirm = window.confirm("Are you sure you want to delete ALL blog posts? This cannot be undone.");
+    if (!confirm) return;
+
+    setUpdating(true);
+    try {
+      // Use the actual supabase client which should have user session
+      const { error } = await supabase
+        .from('blog_posts')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (error) throw error;
+      toast.success('Archive wiped clean. You can now start fresh!');
+      setMyPosts([]);
+      setStats(prev => ({ ...prev, totalStories: 0, myPostsCount: 0 }));
+    } catch (err: any) {
+      console.error('Reset error:', err);
+      toast.error(err.message || 'Failed to wipe archive. You may need to check RLS policies.');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleSyncMapLandmarks = async () => {
+    if (!isAdmin) {
+      toast.error("Unauthorized: Admin credentials required.");
+      return;
+    }
+    
+    console.log('Sync button clicked. Admin status:', { isAdmin, isEmailAdmin });
+    const confirm = window.confirm("This will PERMANENTLY REPLACE all database landmarks with your new high-quality images and data. Continue?");
+    if (!confirm) return;
+
+    setUpdating(true);
+    toast.info("Starting master synchronization...");
+    
+    try {
+      const landmarksToSeed = [
+        { name: 'The Forbidden City', name_zh: '故宫博物院', province: 'Beijing', description: "The world's largest surviving wooden palace complex.", category: 'Ancient', lat: 39.9163, lng: 116.3972, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/forbibden%20city.webp' },
+        { name: 'Temple of Heaven', name_zh: '天坛', province: 'Beijing', description: 'An imperial complex of religious buildings visited by Emperors.', category: 'Ancient', lat: 39.8822, lng: 116.4066, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Temple%20of%20Heaven.webp' },
+        { name: 'Potala Palace', name_zh: '布达拉宫', province: 'Tibet', description: 'A massive fortress-like complex and a masterpiece of Tibetan architecture.', category: 'Ancient', lat: 29.6577, lng: 91.1172, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Potala%20Palace.jpg' },
+        { name: 'The Bund', name_zh: '外滩', province: 'Shanghai', description: 'A famous waterfront area with dozens of historical buildings.', category: 'Modern', lat: 31.2415, lng: 121.4842, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/The%20Bund.jpg' },
+        { name: 'Canton Tower', name_zh: '广州塔', province: 'Guangdong', description: 'A multipurpose observation tower with a unique hyper-curved design.', category: 'Modern', lat: 23.1065, lng: 113.3242, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/canton%20tower.jpg' },
+        { name: 'Terracotta Army', name_zh: '秦始皇兵马俑', province: 'Shaanxi', description: 'A collection of terracotta sculptures depicting the first Emperor\'s armies.', category: 'Ancient', lat: 34.3841, lng: 109.2785, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Terracotta%20Army.jpg' },
+        { name: 'Lijiang Old Town', name_zh: '丽江古城', province: 'Yunnan', description: 'A UNESCO site known for its blend of indigenous architectural traditions.', category: 'Ancient', lat: 26.8721, lng: 100.2274, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Lijiang%20Old%20Town.jpg' },
+        { name: 'Mogao Caves', name_zh: '莫高窟', province: 'Gansu', description: 'Also known as the Caves of the Thousand Buddhas, containing a system of 492 temples.', category: 'Ancient', lat: 40.0425, lng: 94.8111, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/China_Magao-scaled.jpg' },
+        { name: 'Chongqing Art Museum', name_zh: '重庆美术馆', province: 'Chongqing', description: 'A modern landmark known for its distincitve "red lattice" architectural design.', category: 'Modern', lat: 29.5630, lng: 106.5770, image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Chongqing_Art_Museum.jpg' }
+      ];
+
+      console.log('Starting landmark synchronization...');
+      toast.loading('Step 1: Clearing old database entries...', { id: 'sync-steps' });
+      
+      // Step 1: Delete all existing landmarks
+      const { error: deleteError } = await supabase
+        .from('landmarks')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (deleteError) {
+        console.error('Delete step failed:', deleteError);
+        toast.error(`Clear failed: ${deleteError.message}`, { id: 'sync-steps' });
+        throw new Error(`Delete failed: ${deleteError.message}`);
+      }
+
+      console.log('Old landmarks cleared. Seeding new ones...');
+      toast.loading('Step 2: Injecting new high-quality assets...', { id: 'sync-steps' });
+
+      // Step 2: Insert the new ones
+      const { error: insertError } = await supabase
+        .from('landmarks')
+        .insert(landmarksToSeed);
+
+      if (insertError) {
+        console.error('Insert step failed:', insertError);
+        toast.error(`Injection failed: ${insertError.message}`, { id: 'sync-steps' });
+        throw new Error(`Insert failed: ${insertError.message}`);
+      }
+
+      toast.success('Synchronization Complete! Page will refresh.', { id: 'sync-steps' });
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (err: any) {
+      console.error('Sync process error:', err);
+      toast.error(err.message || 'Synchronization failed.');
     } finally {
       setUpdating(false);
     }
@@ -494,7 +624,7 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                <div className="text-center pt-8">
+                <div className="text-center pt-8 space-y-6">
                   <Button 
                     variant="link" 
                     onClick={() => toast.info('Full activity log feature coming soon!')}
@@ -503,6 +633,97 @@ export default function Dashboard() {
                     View Full Scroll 查看完整记录
                     <motion.span animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="ml-2">→</motion.span>
                   </Button>
+
+                  {isAdmin && (
+                    <div className="pt-12 border-t border-border/50 space-y-8">
+                      <div className="inline-block p-8 border border-destructive/20 rounded-[2rem] bg-destructive/5 max-w-lg">
+                        <h4 className="text-xl font-serif font-bold text-destructive mb-3">Admin Emergency Dashboard</h4>
+                        <p className="text-sm text-muted-foreground font-serif italic mb-6">This will permanently delete all blog posts from the database to allow for a fresh start.</p>
+                        <Button 
+                          variant="destructive"
+                          onClick={handleResetArchive}
+                          disabled={updating}
+                          className="rounded-xl px-8 h-12 font-serif italic shadow-lg shadow-destructive/10"
+                        >
+                          <XCircle className="mr-2 h-4 w-4" /> Clear All Blog Posts
+                        </Button>
+                      </div>
+
+                      <div className="inline-block w-full p-8 border border-primary/20 rounded-[2rem] bg-primary/5 mt-8">
+                        <div className="flex items-center justify-between mb-8">
+                          <h4 className="text-xl font-serif font-bold text-primary">Map Navigator Management</h4>
+                          <div className="flex items-center space-x-2 bg-background/50 px-3 py-1 rounded-full border border-border">
+                            <div className={`h-2 w-2 rounded-full ${isAdmin ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                              {isAdmin ? 'Admin Authenticated' : 'Unauthorized Access'}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground font-serif italic mb-6">
+                          Sync your latest high-quality images and landmarks. This will perform a <strong>Hard Reset</strong> on the database to ensure zero duplicates.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                          <div className="space-y-4">
+                            <Button 
+                              onClick={handleSyncMapLandmarks}
+                              disabled={updating}
+                              className="w-full rounded-xl px-8 h-12 font-serif italic shadow-lg shadow-primary/10 bg-primary hover:bg-primary/90 text-white"
+                            >
+                              <Globe className="mr-2 h-4 w-4" /> Clear & Sync Landmarks
+                            </Button>
+                            
+                            <div className="p-4 bg-muted/40 rounded-xl space-y-3">
+                              <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-tighter flex items-center">
+                                <Award className="mr-2 h-3 w-3 text-primary" /> Active Permissions Profile:
+                              </p>
+                              <div className="text-[10px] font-mono text-muted-foreground space-y-1.5 list-disc pl-2">
+                                <p className="flex justify-between"><span>Email:</span> <span className="text-foreground">{profile?.email || 'casa.coast.je@gmail.com'}</span></p>
+                                <p className="flex justify-between"><span>Database Role:</span> <span className="text-foreground font-bold">{profile?.role || 'user (bypass active)'}</span></p>
+                                <p className="flex justify-between"><span>Session Level:</span> <span className="text-primary font-bold">SUPER ADMIN</span></p>
+                                <div className="pt-2 border-t border-border/50 text-[8px] text-emerald-500 font-bold uppercase tracking-widest leading-tight">
+                                  ✓ Bulk Map Sync Enabled<br />
+                                  ✓ Global Archive Delete Enabled<br />
+                                  ✓ Image Injection Enabled
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-black/50 p-4 rounded-xl border border-zinc-800">
+                            <p className="text-[10px] text-zinc-500 mb-2 uppercase tracking-widest font-bold">Manual SQL Override (If button fails):</p>
+                            <code className="text-primary font-mono text-[9px] leading-tight block whitespace-pre h-40 overflow-y-auto">
+                              {`-- 1. CLEAN RESET
+TRUNCATE landmarks;
+
+-- 2. VERIFY PERMISSIONS
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'landmarks' AND policyname = 'Admin write') THEN
+        CREATE POLICY "Admin write" ON landmarks FOR ALL USING (true);
+    END IF;
+END $$;
+
+-- 3. SCHEMA ENSURANCE
+CREATE TABLE IF NOT EXISTS landmarks (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT UNIQUE,
+  name_zh TEXT,
+  province TEXT,
+  description TEXT,
+  category TEXT,
+  lat DOUBLE PRECISION,
+  lng DOUBLE PRECISION,
+  image_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);`}
+                            </code>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>
@@ -512,8 +733,10 @@ export default function Dashboard() {
             <Card className="rounded-[3rem] border-none shadow-sm bg-card p-12">
               <div className="flex justify-between items-end mb-12">
                 <div>
-                  <h2 className="text-4xl font-serif font-bold">My Blog Posts 我的文章</h2>
-                  <p className="text-muted-foreground mt-2 font-serif italic">Manage your published and draft stories.</p>
+                  <h2 className="text-4xl font-serif font-bold">{isAdmin ? 'Manage All Stories 管理所有文章' : 'My Blog Posts 我的文章'}</h2>
+                  <p className="text-muted-foreground mt-2 font-serif italic">
+                    {isAdmin ? 'Review, update, or remove any story from the archive.' : 'Manage your published and draft stories.'}
+                  </p>
                 </div>
                 <Link to="/blog/new" className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-white rounded-2xl px-8 py-6 font-serif italic" })}>
                   <Plus className="mr-2 h-5 w-5" /> New Post 新文章
@@ -522,20 +745,27 @@ export default function Dashboard() {
               
               {loading ? (
                 <div className="py-20 text-center font-serif italic text-muted-foreground">Loading scrolls...</div>
-              ) : myPosts.length > 0 ? (
+              ) : (isAdmin ? allPosts : myPosts).length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {myPosts.map(post => (
+                  {(isAdmin ? allPosts : myPosts).map(post => (
                     <motion.div key={post.id} whileHover={{ y: -5 }}>
                       <Card className="rounded-3xl border border-border bg-background hover:border-primary/50 transition-all p-8 group">
                         <div className="flex justify-between items-start mb-6">
-                          <Badge variant="outline" className="rounded-full px-4 py-1 uppercase tracking-widest text-[10px]">{post.category}</Badge>
+                          <div className="flex flex-col gap-1">
+                            <Badge variant="outline" className="rounded-full px-4 py-1 uppercase tracking-widest text-[10px] w-fit">{post.category}</Badge>
+                            {isAdmin && (
+                              <span className="text-[10px] text-muted-foreground font-serif italic ml-1">
+                                By: {(post as any).profiles?.full_name || 'Admin'}
+                              </span>
+                            )}
+                          </div>
                           <span className="text-xs text-muted-foreground font-serif italic">{new Date(post.created_at).toLocaleDateString()}</span>
                         </div>
-                        <h4 className="text-2xl font-serif font-bold mb-4 group-hover:text-primary transition-colors">{post.title}</h4>
+                        <h4 className="text-2xl font-serif font-bold mb-4 group-hover:text-primary transition-colors line-clamp-2">{post.title}</h4>
                         <div className="flex items-center space-x-4 pt-4 border-t border-border">
                           <Link to={`/blog/edit/${post.id}`} className="text-sm font-serif italic hover:text-primary transition-colors">Edit 编辑</Link>
                           <button 
-                            onClick={() => toast.info('Delete functionality will be implemented soon.')}
+                            onClick={() => handleDeletePost(post.id)}
                             className="text-sm font-serif italic text-destructive hover:opacity-70 transition-opacity"
                           >
                             Delete 删除
@@ -556,6 +786,31 @@ export default function Dashboard() {
                 </div>
               )}
             </Card>
+
+            {isAdmin && (
+              <Card className="mt-12 rounded-[2rem] border-none shadow-sm bg-zinc-900 text-zinc-100 p-8 overflow-hidden">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-serif font-bold text-zinc-400 uppercase tracking-widest flex items-center">
+                      <Clock className="mr-3 h-5 w-5" /> SQL Reference Database Patch
+                    </h3>
+                    <p className="text-zinc-500 font-serif italic max-w-2xl">
+                      If you need to manually fix RLS (Row Level Security) or wipe specific sets of blogs via the Supabase SQL Editor, use these snippets.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-8 space-y-6">
+                  <div className="bg-black/50 p-6 rounded-2xl border border-zinc-800">
+                    <p className="text-xs text-zinc-600 mb-2 uppercase tracking-widest font-bold">Wipe all blog posts (DANGEROUS):</p>
+                    <code className="text-primary font-mono text-sm break-all">DELETE FROM blog_posts;</code>
+                  </div>
+                  <div className="bg-black/50 p-6 rounded-2xl border border-zinc-800">
+                    <p className="text-xs text-zinc-600 mb-2 uppercase tracking-widest font-bold">Change author of all posts to you:</p>
+                    <code className="text-primary font-mono text-sm break-all">UPDATE blog_posts SET author_id = '{profile?.id}';</code>
+                  </div>
+                </div>
+              </Card>
+            )}
           </TabsContent>
 
           <TabsContent key="users" value="users" className="outline-none">

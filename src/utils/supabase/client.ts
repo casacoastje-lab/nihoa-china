@@ -5,7 +5,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const createClient = () => {
   if (!supabaseUrl || !supabaseKey) {
-    console.error('Supabase credentials are missing! Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment variables.');
+    console.warn('Supabase credentials are not configured. App will run in preview/mock mode.');
   }
   
   return createBrowserClient(

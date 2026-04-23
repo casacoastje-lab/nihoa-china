@@ -9,9 +9,7 @@ export default defineConfig(({mode}) => {
     base: process.env.NODE_ENV === 'production' ? './' : '/',
     plugins: [react(), tailwindcss()],
     define: {
-      'process.env.ZHIPU_API_KEY': JSON.stringify(env.ZHIPU_API_KEY || process.env.ZHIPU_API_KEY),
-      'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || env.SUPABASE_URL || process.env.SUPABASE_URL),
-      'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY),
+      'process.env.ZHIPU_API_KEY': JSON.stringify(env.VITE_ZHIPU_API_KEY || env.ZHIPU_API_KEY || process.env.VITE_ZHIPU_API_KEY || process.env.ZHIPU_API_KEY),
     },
     resolve: {
       alias: {

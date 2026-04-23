@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
@@ -6,78 +6,158 @@ import { Badge } from '@/src/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/src/components/ui/dialog';
 import { Search, Image as ImageIcon, Info, Calendar, MapPin, X, Download } from 'lucide-react';
 import { Input } from '@/src/components/ui/input';
+import { supabase } from '@/src/lib/supabase';
+import { toast } from 'sonner';
 
-const galleryItems = [
+const sampleCards = [
   {
-    id: 1,
-    title: 'Sunrise over the Great Wall',
-    description: 'A breathtaking view of the Jinshanling section of the Great Wall at dawn.',
-    info: 'The Great Wall of China is a series of fortifications that were built across the historical northern borders of ancient Chinese states and Imperial China as protection against various nomadic groups from the Eurasian Steppe.',
-    image: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=1200',
+    id: 'master-1',
+    title: 'The Forbidden City',
+    description: 'The geometric and architectural center of ancient Beijing.',
+    info: 'As the world\'s largest surviving wooden palace complex, it encapsulates traditional Chinese palatial architecture. It relies heavily on timber framing, yellow glazed roof tiles, and complex Dougong brackets to support expansive eaves without nails.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/forbibden%20city.webp',
     location: 'Beijing',
-    date: 'Oct 2023',
-    category: 'History'
+    date: '1420',
+    category: 'Ancient Structure'
   },
   {
-    id: 2,
-    title: 'Neon Nights in Shanghai',
-    description: 'The futuristic skyline of Pudong reflected in the Huangpu River.',
-    info: 'Shanghai is one of the world\'s largest seaport cities and a major financial center of the Asia-Pacific region. The Pudong district is famous for its distinctive skyline, including the Shanghai Tower and the Oriental Pearl Tower.',
-    image: 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&q=80&w=1200',
+    id: 'master-2',
+    title: 'Temple of Heaven',
+    description: 'An imperial complex of religious buildings visited by Emperors for annual prayer.',
+    info: 'Built in the same era as the Forbidden City, the Temple of Heaven is a masterpiece of Ming architecture. Its primary structure, the Hall of Prayer for Good Harvests, is a completely wooden building constructed without a single nail, supported by 28 massive pillars.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Temple%20of%20Heaven.webp',
+    location: 'Beijing',
+    date: '1420',
+    category: 'Ancient Structure'
+  },
+  {
+    id: 'master-3',
+    title: 'Potala Palace',
+    description: 'A massive fortress-like complex in Lhasa, a masterpiece of Tibetan architecture.',
+    info: 'The Potala Palace stands on the Red Mountain in the center of the Lhasa Valley. Built at an altitude of 3,700 meters, its thick walls are made of stone and rammed earth, painted with white and red to signify different religious and administrative functions.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Potala%20Palace.jpg',
+    location: 'Lhasa, Tibet',
+    date: '1645',
+    category: 'Ancient Structure'
+  },
+  {
+    id: 'master-4',
+    title: 'Lijiang Old Town',
+    description: 'A UNESCO World Heritage site known for its unique blend of indigenous architectural traditions.',
+    info: 'Lijiang is famous for its sophisticated water-supply system of channels and bridges. The houses are typically timber-framed with mud-brick walls and tiled roofs, reflecting a unique synthesis of Han, Tibetan, and Bai building styles.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Lijiang%20Old%20Town.jpg',
+    location: 'Lijiang, Yunnan',
+    date: '11th Century',
+    category: 'Ancient Structure'
+  },
+  {
+    id: 'master-5',
+    title: 'Terracotta Army',
+    description: 'A collection of terracotta sculptures depicting the armies of the first Emperor of China.',
+    info: 'Discovered in 1974, this vast subterranean necropolis contains thousands of individual life-sized figures. Each soldier has distinct facial features, and the arrangement reflects the precise military formation of the Qin Dynasty.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Terracotta%20Army.jpg',
+    location: 'Xi\'an, Shaanxi',
+    date: '210 BC',
+    category: 'Ancient Structure'
+  },
+  {
+    id: 'master-6',
+    title: 'The Bund',
+    description: 'A famous waterfront area in Shanghai, featuring iconic historical buildings.',
+    info: 'The Bund is a living museum of colonial-era architecture, featuring Neoclassical, Renaissance, Art Deco, and Modernist styles. It represents the meeting point of East and West during Shanghai\'s rise as a global financial hub.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/The%20Bund.jpg',
     location: 'Shanghai',
-    date: 'Nov 2023',
-    category: 'Modern'
+    date: '19th-20th Century',
+    category: 'Modern Wunder'
   },
   {
-    id: 3,
-    title: 'Traditional Tea Ceremony',
-    description: 'The delicate art of preparing and serving Chinese tea.',
-    info: 'Chinese tea culture refers to how tea is prepared as well as the occasions when people consume tea in China. Tea culture in China differs from that in Europe, Britain or Japan in the preparation methods, tasting methods and the occasions for which it is consumed.',
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200',
-    location: 'Hangzhou',
-    date: 'Sep 2023',
-    category: 'Culture'
+    id: 'master-7',
+    title: 'Canton Tower',
+    description: 'A multipurpose observation tower in Guangzhou, known for its distinct hyper-curved design.',
+    info: 'The Canton Tower, also known as Guangzhou TV & Sightseeing Tower, is a staggering feat of structural engineering. Its unique "waist" is achieved through a patented design of inclined columns and rings, making it one of the most recognizable structures in China.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/canton%20tower.jpg',
+    location: 'Guangzhou, Guangdong',
+    date: '2010',
+    category: 'Modern Wunder'
   },
   {
-    id: 4,
-    title: 'Zhangjiajie Mountains',
-    description: 'The inspiration for the floating mountains in the movie Avatar.',
-    info: 'Zhangjiajie National Forest Park is a unique national forest park located in Zhangjiajie City in northern Hunan Province. It is one of several national parks within the Wulingyuan Scenic Area.',
-    image: 'https://images.unsplash.com/photo-1599571234349-bb22800c582d?auto=format&fit=crop&q=80&w=1200',
-    location: 'Hunan',
-    date: 'Aug 2023',
-    category: 'Nature'
+    id: 'master-8',
+    title: 'Mogao Caves',
+    description: 'A UNESCO World Heritage site known as the "Caves of the Thousand Buddhas".',
+    info: 'Spanning 1,000 years of Buddhist art, the Mogao Caves are located at a strategic point along the Silk Road. They contain some of the finest examples of Buddhist frescoes and sculptures, housed in almost 500 individual grottoes carved into the cliff face.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/China_Magao-scaled.jpg',
+    location: 'Dunhuang, Gansu',
+    date: '4th-14th Century',
+    category: 'Ancient Structure'
   },
   {
-    id: 5,
-    title: 'Ancient Town of Fenghuang',
-    description: 'A well-preserved ancient town with traditional stilt houses.',
-    info: 'Fenghuang Ancient Town is situated on the western boundary of Hunan Province. It is a place where the ethnic minority of Miao and Tujia live. It was added to the UNESCO World Heritage Tentative List in 2008.',
-    image: 'https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?auto=format&fit=crop&q=80&w=1200',
-    location: 'Hunan',
-    date: 'July 2023',
-    category: 'History'
-  },
-  {
-    id: 6,
-    title: 'Giant Panda Research Base',
-    description: 'Getting up close with China\'s national treasure.',
-    info: 'The Chengdu Research Base of Giant Panda Breeding is a non-profit research and breeding facility for giant pandas and other rare animals. It is located in Chengdu, Sichuan, China.',
-    image: 'https://images.unsplash.com/photo-1564349683136-77e08bef1ef1?auto=format&fit=crop&q=80&w=1200',
-    location: 'Chengdu',
-    date: 'June 2023',
-    category: 'Nature'
+    id: 'master-9',
+    title: 'Chongqing Art Museum',
+    description: 'A striking modern architectural landmark in the heart of Chongqing.',
+    info: 'Known for its distinctive red "chopstick" or lattice design, the Chongqing Art Museum is a masterpiece of modern architecture. The building uses a complex structural grid of vertical and horizontal red poles to create a weaving effect that symbolizes the spirit of the mountain city.',
+    image: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Chongqing_Art_Museum.jpg',
+    location: 'Chongqing',
+    date: '2013',
+    category: 'Modern Wunder'
   }
 ];
 
 export default function Gallery() {
-  const [selectedItem, setSelectedItem] = useState<typeof galleryItems[0] | null>(null);
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const categories = ['All', ...new Set(galleryItems.map(item => item.category))];
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('landmarks')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
 
-  const filteredItems = galleryItems.filter(item => 
+        // Map DB landmarks to Gallery format
+        const dbItems = (data || []).map(l => ({
+          id: l.id,
+          title: l.name,
+          description: l.description,
+          info: l.description + ' ' + (l.name_zh || ''),
+          image: l.image_url,
+          location: l.province,
+          date: 'Recorded History',
+          category: l.category || 'Archive'
+        }));
+
+        // Merge with master samples, avoiding exact title duplicates
+        const merged = [...sampleCards];
+        dbItems.forEach(dbI => {
+          if (!merged.find(s => s.title.toLowerCase().trim() === dbI.title.toLowerCase().trim())) {
+            merged.push(dbI);
+          } else {
+            // Update the master image with DB one if it exists
+            const idx = merged.findIndex(s => s.title.toLowerCase().trim() === dbI.title.toLowerCase().trim());
+            if (idx !== -1) merged[idx] = { ...merged[idx], image: dbI.image, id: dbI.id };
+          }
+        });
+
+        setItems(merged);
+      } catch (err) {
+        console.error('Gallery fetch error:', err);
+        setItems(sampleCards);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  const categories = ['All', ...new Set(items.map(item => item.category))];
+
+  const filteredItems = items.filter(item => 
     (activeCategory === 'All' || item.category === activeCategory) &&
     (item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
      item.description.toLowerCase().includes(searchQuery.toLowerCase()))

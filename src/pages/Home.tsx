@@ -3,6 +3,7 @@ import { Button, buttonVariants } from '@/src/components/ui/button';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { Map, BookOpen, Image as ImageIcon, Gamepad2, ArrowRight, Quote, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
+import ModelViewer from '@/src/components/ModelViewer';
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,33 +17,33 @@ export default function Home() {
 
   const features = [
     {
-      title: 'Cultural Map',
-      zh: '文化地图',
-      desc: 'Navigate through 5,000 years of history with our interactive heritage navigator.',
+      title: 'Architectural Map',
+      zh: '建筑地图',
+      desc: 'Navigate through ancient and modern wonders, from the Great Wall to the Shanghai Tower.',
       icon: Map,
       to: '/map',
       color: 'bg-red-500'
     },
     {
-      title: 'Living Blog',
-      zh: '生活博客',
-      desc: 'Stories from the heart of the Middle Kingdom, curated by our global community.',
+      title: 'Design Philosophy',
+      zh: '设计理念',
+      desc: 'Deep dives into timber frames, Dougong brackets, and visionary modern designs.',
       icon: BookOpen,
       to: '/blog',
       color: 'bg-amber-500'
     },
     {
-      title: 'Visual Archive',
+      title: 'Visual Index',
       zh: '视觉档案',
-      desc: 'A high-definition sanctuary for the colors and textures of Chinese life.',
+      desc: 'A photographic journey showcasing the materials, angles, and scale of iconic landmarks.',
       icon: ImageIcon,
       to: '/gallery',
       color: 'bg-emerald-500'
     },
     {
-      title: 'Language Lab',
-      zh: '语言实验室',
-      desc: 'Master the art of Hanzi through our immersive, motion-driven learning experience.',
+      title: 'Structure Lab',
+      zh: '结构实验室',
+      desc: 'Learn about sticky rice mortar, spatial symmetry, and modern steel girders.',
       icon: Gamepad2,
       to: '/learn',
       color: 'bg-blue-500'
@@ -52,15 +53,30 @@ export default function Home() {
   return (
     <div ref={containerRef} className="relative overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
-        <motion.div style={{ y }} className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-black/40 z-10" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 bg-black">
+        <motion.div style={{ y }} className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black">
+          {/* Mobile and Tablet Picture */}
           <img 
-            src="https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&q=80&w=2000" 
-            alt="Forbidden City" 
-            className="w-full h-full object-cover"
+            src="https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/forbibden%20city.webp" 
+            alt="Forbidden City Architecture" 
+            className="absolute inset-0 block lg:hidden w-full h-full object-cover opacity-80"
             referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
           />
+
+          {/* Desktop Video Background */}
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            crossOrigin="anonymous"
+            className="absolute inset-0 hidden lg:block w-full h-full object-cover pointer-events-none"
+          >
+            <source src="https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Video%20Project.mp4" type="video/mp4" />
+          </video>
+          
+          <div className="absolute inset-0 bg-black/50 z-10" />
         </motion.div>
 
         <motion.div 
@@ -68,7 +84,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="relative z-20 text-center px-4 max-w-5xl mx-auto"
+          className="relative z-20 text-center px-4 max-w-6xl mx-auto"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -77,28 +93,28 @@ export default function Home() {
             className="mb-8 mt-12 sm:mb-12 inline-block max-w-[90vw]"
           >
             <span className="block w-full whitespace-normal sm:whitespace-nowrap px-4 sm:px-6 py-2 sm:py-2 rounded-full sm:rounded-full border border-white/30 backdrop-blur-md text-white font-serif italic text-xs sm:text-sm md:text-lg tracking-wider sm:tracking-widest uppercase leading-snug">
-              The Living Scroll • 活着的长卷
+              Ancient Roots • Modern Marvels
             </span>
           </motion.div>
           
-          <h1 className="text-4xl sm:text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-[1.1] sm:leading-none mb-8 sm:mb-16">
-            ChinaVerse <br />
-            <span className="text-primary italic">中华宇宙</span>
+          <h1 className="text-4xl sm:text-7xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-[1.1] sm:leading-none mb-8 sm:mb-10">
+            ArchiChina <br />
+            <span className="text-primary italic">中华建筑</span>
           </h1>
           
-          <p className="text-base sm:text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-8 sm:mb-20">
-            "A digital sanctuary for the timeless spirit of China. Preserving the past, architecting the future."
+          <p className="text-base sm:text-xl md:text-3xl text-white/80 font-serif italic max-w-3xl mx-auto leading-relaxed mb-8 sm:mb-16">
+            "From the interlocking timber frames of the Forbidden City to the avant-garde steel loops of the CCTV Headquarters."
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-12 sm:mb-20">
             <Link 
-              to="/learn" 
+              to="/map" 
               className={buttonVariants({ 
                 size: "lg", 
                 className: "w-full sm:w-auto bg-primary hover:bg-primary/90 text-white rounded-full px-6 sm:px-12 py-6 sm:py-8 text-base sm:text-xl font-serif italic shadow-2xl shadow-primary/40 group whitespace-nowrap" 
               })}
             >
-              Begin the Journey <span className="hidden sm:inline">开启旅程</span>
+              Explore Map <span className="hidden sm:inline">探索地图</span>
               <motion.span 
                 animate={{ x: [0, 5, 0] }} 
                 transition={{ repeat: Infinity, duration: 1.5 }}
@@ -108,14 +124,14 @@ export default function Home() {
               </motion.span>
             </Link>
             <Link 
-              to="/map" 
+              to="/gallery" 
               className={buttonVariants({ 
                 variant: "outline",
                 size: "lg", 
                 className: "w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-md rounded-full px-6 sm:px-12 py-6 sm:py-8 text-base sm:text-xl font-serif italic whitespace-nowrap" 
               })}
             >
-              Explore Map <span className="hidden sm:inline">探索地图</span>
+              Visual Index <span className="hidden sm:inline">视觉索引</span>
             </Link>
           </div>
         </motion.div>
@@ -125,13 +141,13 @@ export default function Home() {
           transition={{ repeat: Infinity, duration: 2 }}
           className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 text-white/50 flex flex-col items-center"
         >
-          <span className="text-xs uppercase tracking-[0.3em] mb-4">Scroll to Unfold</span>
+          <span className="text-xs uppercase tracking-[0.3em] mb-4">Discover Structure</span>
           <div className="w-px h-12 bg-gradient-to-b from-white/50 to-transparent" />
         </motion.div>
       </section>
 
-      {/* Philosophy Section */}
-      <section className="py-20 sm:py-32 bg-background relative">
+      {/* 3D Model Section */}
+      <section className="py-20 sm:py-32 bg-background relative overflow-hidden border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-center">
             <motion.div
@@ -142,24 +158,23 @@ export default function Home() {
             >
               <div className="inline-flex items-center space-x-4 text-primary">
                 <div className="h-px w-8 sm:w-12 bg-primary" />
-                <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">Our Philosophy 我们的哲学</span>
+                <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">Bridging Eras</span>
               </div>
-              <h2 className="text-3xl sm:text-6xl font-serif font-bold tracking-tight leading-tight text-foreground">
-                Infrastructure for <br />
-                <span className="italic text-primary">Cultural Continuity</span>
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight leading-tight text-foreground">
+                The Anatomy of <br />
+                <span className="italic text-primary">Timeless Design</span>
               </h2>
               <p className="text-lg sm:text-2xl font-serif text-muted-foreground leading-relaxed italic">
-                We believe that culture is not a static artifact to be stored in a museum, but a living, breathing entity that evolves with every interaction.
+                From the revolutionary interlocking wooden Dougong brackets that survive earthquakes without a single nail, to modern marvels pushing the limits of steel girders.
               </p>
-              <div className="grid grid-cols-2 gap-6 sm:gap-8 pt-4 sm:pt-8">
-                <div className="space-y-1 sm:space-y-2">
-                  <div className="text-3xl sm:text-4xl font-serif font-bold text-primary">5,000+</div>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground uppercase tracking-widest">Years of History</p>
-                </div>
-                <div className="space-y-1 sm:space-y-2">
-                  <div className="text-3xl sm:text-4xl font-serif font-bold text-primary">1.4B+</div>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground uppercase tracking-widest">Global Voices</p>
-                </div>
+              
+              <div className="space-y-6 pt-6 border-t border-border mt-8">
+                <h3 className="font-serif font-bold text-xl uppercase tracking-widest text-primary">Pioneering Visionaries</h3>
+                <ul className="space-y-4 font-serif text-lg text-muted-foreground">
+                  <li><strong>Liang Sicheng:</strong> The "father of modern Chinese architecture" who preserved the Forbidden City.</li>
+                  <li><strong>Lin Huiyin:</strong> China's first female architect and pioneer in architectural research.</li>
+                  <li><strong>I.M. Pei:</strong> Legendary architect known for the Bank of China Tower and Louvre Pyramid.</li>
+                </ul>
               </div>
             </motion.div>
 
@@ -167,21 +182,17 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="relative"
+              className="relative aspect-square sm:aspect-[4/3] lg:aspect-square bg-muted/30 rounded-[3rem] overflow-hidden shadow-2xl border border-border"
             >
-              <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700">
-                <img 
-                  src="https://images.unsplash.com/photo-1529921879218-f99546d03a9d?auto=format&fit=crop&q=80&w=1000" 
-                  alt="Calligraphy" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div className="absolute -bottom-10 -left-10 bg-black p-8 rounded-3xl shadow-xl max-w-xs border border-border">
-                <Quote className="text-primary h-8 w-8 mb-4" />
-                <p className="font-serif italic text-lg leading-relaxed text-white">
-                  "The brush mirrors the mind; the scroll mirrors the universe."
-                </p>
+              <ModelViewer url="https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/forbidden_city_model_-.glb" />
+              
+              <div className="absolute top-6 left-6 right-6 flex justify-between pointer-events-none">
+                <div className="bg-background/80 backdrop-blur-md px-4 py-2 rounded-full border border-border text-xs font-serif font-bold uppercase tracking-widest">
+                  Interactive 3D Demo
+                </div>
+                <div className="bg-primary/90 text-white backdrop-blur-md px-4 py-2 rounded-full text-xs font-serif italic">
+                  Drag to rotate
+                </div>
               </div>
             </motion.div>
           </div>
@@ -242,10 +253,10 @@ export default function Home() {
           <Sparkles className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-white/50" />
           <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-bold tracking-tight">
             Become a part of the <br className="hidden sm:block" />
-            <span className="italic">Eternal Rhythm</span>
+            <span className="italic">Architectural Legacy</span>
           </h2>
           <p className="text-lg sm:text-2xl font-serif italic text-white/80 max-w-2xl mx-auto leading-relaxed">
-            Join thousands of explorers, scholars, and creators in building the future of Chinese cultural heritage.
+            Join thousands of explorers, architects, and scholars in preserving and building the future of Chinese design.
           </p>
           <div className="pt-4 sm:pt-8">
             <Link 

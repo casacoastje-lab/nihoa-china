@@ -12,6 +12,8 @@ import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
 
+import { featuredStories } from '@/src/data/blogData';
+
 export default function BlogPostDetail() {
   const { id } = useParams();
   const { user, profile } = useAuth();
@@ -25,7 +27,15 @@ export default function BlogPostDetail() {
     const fetchPostAndComments = async () => {
       setLoading(true);
       try {
-        // Fetch Post
+        // First check our curated list
+        const curated = featuredStories.find(p => p.id === id);
+        if (curated) {
+          setPost(curated);
+          setLoading(false);
+          return;
+        }
+
+        // Only then try database (for future dynamic posts)
         const { data: postData, error: postError } = await supabase
           .from('blog_posts')
           .select('*, author:profiles(*)')
@@ -46,7 +56,7 @@ export default function BlogPostDetail() {
         setComments(commentsData || []);
       } catch (err: any) {
         console.error('Fetch error:', err);
-        toast.error(err.message || 'Failed to load story');
+        toast.error('Story not found in the archive.');
       } finally {
         setLoading(false);
       }

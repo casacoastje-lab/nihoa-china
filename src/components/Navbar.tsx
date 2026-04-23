@@ -30,6 +30,7 @@ export default function Navbar() {
     { to: '/map', label: 'Explore', zh: '探索', icon: Map },
     { to: '/blog', label: 'Blog', zh: '博客', icon: BookOpen },
     { to: '/learn', label: 'Learn', zh: '学习', icon: Gamepad2 },
+    { to: '/architects', label: 'Architects', zh: '建筑师', icon: User },
     { to: '/gallery', label: 'Gallery', zh: '画廊', icon: ImageIcon },
   ];
 
@@ -55,10 +56,10 @@ export default function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 className={cn(
                   "font-serif font-bold text-primary tracking-tight transition-all",
-                  isMapPage ? "text-base sm:text-lg" : "text-xl sm:text-2xl"
+                  isMapPage ? "text-base sm:text-lg" : "text-lg sm:text-xl lg:text-2xl whitespace-nowrap"
                 )}
               >
-                ChinaVerse {!isMapPage && <span className="hidden xs:inline text-foreground font-normal">中华宇宙</span>}
+                ArchiChina {!isMapPage && <span className="hidden xs:inline text-foreground font-normal">中华建筑</span>}
               </motion.span>
             </Link>
           </div>
@@ -66,7 +67,7 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className={cn(
             "hidden md:flex items-center transition-all",
-            isMapPage ? "space-x-6" : "space-x-10"
+            isMapPage ? "space-x-4" : "space-x-5 lg:space-x-8"
           )}>
             {navLinks.map((link) => (
               <Link 
@@ -75,8 +76,8 @@ export default function Navbar() {
                 className="group flex flex-col items-center transition-colors hover:text-primary text-foreground"
               >
                 <span className={cn(
-                  "font-medium tracking-wide transition-all",
-                  isMapPage ? "text-xs" : "text-sm"
+                  "font-medium tracking-wide transition-all whitespace-nowrap",
+                  isMapPage ? "text-[10px]" : "text-xs lg:text-sm"
                 )}>
                   {link.label} {isMapPage ? "" : link.zh}
                 </span>
@@ -132,11 +133,11 @@ export default function Navbar() {
                   "bg-primary hover:bg-primary/90 text-white rounded-full font-serif italic transition-all shrink-0 flex items-center justify-center",
                   isMapPage 
                     ? "px-3 py-1.5 text-xs h-7 sm:px-6 sm:h-9 sm:text-sm" 
-                    : "px-4 h-9 text-sm sm:px-8 sm:h-11 sm:text-base md:px-12 md:h-12 md:text-lg"
+                    : "px-4 h-9 text-xs sm:px-6 sm:h-10 sm:text-sm lg:px-10 lg:h-11 lg:text-base whitespace-nowrap"
                 )}
               >
-                <span className="hidden sm:inline">Join our community</span>
-                <span className="sm:hidden">Join</span>
+                <span className="hidden lg:inline">Join our community</span>
+                <span className="lg:hidden">Join</span>
               </Button>
             )}
             

@@ -65,8 +65,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   };
 
-  const isAdmin = profile?.role === 'admin';
-  const isBlogger = profile?.role === 'blogger' || profile?.role === 'admin';
+  const isAdmin = profile?.role === 'admin' || user?.email === 'casa.coast.je@gmail.com';
+  const isBlogger = profile?.role === 'blogger' || profile?.role === 'admin' || user?.email === 'casa.coast.je@gmail.com';
   const isReader = !!profile;
 
   return (

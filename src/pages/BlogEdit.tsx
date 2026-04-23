@@ -22,7 +22,7 @@ export default function BlogEdit() {
   
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('culture');
+  const [category, setCategory] = useState('architects');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [attachments, setAttachments] = useState<string[]>([]);
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
@@ -36,15 +36,15 @@ export default function BlogEdit() {
 
     setIsGenerating(true);
     try {
-      const prompt = `Write a blog post about "${title}" for a website called ChinaVerse. 
+      const prompt = `Write an architectural blog post about "${title}" for a website called ArchiChina. 
       The category is ${category}. 
       Format the output in Markdown. 
       Include an introduction, several sections with headings, and a conclusion. 
-      Make it engaging and informative for people interested in Chinese culture, history, or travel.
+      Make it engaging and informative for people interested in Chinese architecture, structural engineering, or history.
       Keep it between 500-800 words.`;
 
       const generatedContent = await chatWithAI([
-        { role: 'system', content: 'You are an expert travel writer and historian specializing in Chinese culture.' },
+        { role: 'system', content: 'You are an expert architectural historian and engineer specializing in Chinese construction methods and design.' },
         { role: 'user', content: prompt }
       ]);
 
@@ -273,11 +273,12 @@ export default function BlogEdit() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl border-border bg-popover shadow-xl">
-                    <SelectItem value="food" className="font-serif italic py-3">Food 美食</SelectItem>
-                    <SelectItem value="art" className="font-serif italic py-3">Art 艺术</SelectItem>
+                    <SelectItem value="architects" className="font-serif italic py-3">Architects 建筑师</SelectItem>
+                    <SelectItem value="materials" className="font-serif italic py-3">Materials 材料</SelectItem>
                     <SelectItem value="history" className="font-serif italic py-3">History 历史</SelectItem>
-                    <SelectItem value="landmark" className="font-serif italic py-3">Landmark 地标</SelectItem>
-                    <SelectItem value="culture" className="font-serif italic py-3">Culture 文化</SelectItem>
+                    <SelectItem value="modern" className="font-serif italic py-3">Modern 现代</SelectItem>
+                    <SelectItem value="structural" className="font-serif italic py-3">Structural 结构</SelectItem>
+                    <SelectItem value="gardens" className="font-serif italic py-3">Gardens 园林</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

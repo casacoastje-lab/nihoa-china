@@ -17,7 +17,7 @@ export interface BlogPost {
   title: string;
   content: string;
   author_id: string;
-  category: 'food' | 'art' | 'history' | 'landmark' | 'culture';
+  category: string; // Used strictly via select input in the UI, keeping as string to allow freeform expansion.
   thumbnail_url?: string;
   attachments?: string[];
   status: 'draft' | 'published';

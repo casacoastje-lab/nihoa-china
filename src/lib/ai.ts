@@ -5,8 +5,12 @@ export interface Message {
 }
 
 export async function chatWithAI(messages: Message[]) {
-  const apiKey = '09a0e2fad3a64918a0267b1364db9b36.LUT1n64rDgDZAmv7';
+  const apiKey = import.meta.env.VITE_ZHIPU_API_KEY || '';
   
+  if (!apiKey) {
+    throw new Error('ZHIPU_API_KEY is not configured in environment variables');
+  }
+
   try {
     const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
       method: 'POST',

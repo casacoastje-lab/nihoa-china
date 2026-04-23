@@ -24,7 +24,7 @@ interface Landmark {
   image_url: string;
 }
 
-const categories = ['All', 'History', 'Landmark', 'Nature', 'Art', 'Culture', 'Food', 'Architecture'];
+const categories = ['All', 'Ancient', 'Modern', 'Wood Structure', 'Steel & Glass', 'Gardens'];
 
 const sampleLandmarks: Landmark[] = [
   {
@@ -32,33 +32,99 @@ const sampleLandmarks: Landmark[] = [
     name: 'The Forbidden City',
     name_zh: '故宫博物院',
     province: 'Beijing',
-    description: 'The imperial palace of the Ming and Qing Dynasties, a masterpiece of Chinese architecture.',
-    category: 'History',
+    description: "The world's largest surviving wooden palace complex, featuring nearly 1,000 buildings and meticulously planned axial symmetry.",
+    category: 'Ancient',
     lat: 39.9163,
     lng: 116.3972,
-    image_url: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&q=80&w=1000'
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/forbibden%20city.webp'
   },
   {
     id: 'sample-2',
-    name: 'The Great Wall',
-    name_zh: '万里长城',
+    name: 'Temple of Heaven',
+    name_zh: '天坛',
     province: 'Beijing',
-    description: 'A series of fortifications built across the historical northern borders of ancient Chinese states.',
-    category: 'Landmark',
-    lat: 40.4319,
-    lng: 116.5704,
-    image_url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=1000'
+    description: 'An imperial complex of religious buildings visited by the Emperors of the Ming and Qing dynasties for annual ceremonies of prayer to Heaven.',
+    category: 'Ancient',
+    lat: 39.8822,
+    lng: 116.4066,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Temple%20of%20Heaven.webp'
   },
   {
     id: 'sample-3',
-    name: 'West Lake',
-    name_zh: '杭州西湖',
-    province: 'Zhejiang',
-    description: 'A freshwater lake in Hangzhou, famous for its scenic beauty and cultural significance.',
-    category: 'Nature',
-    lat: 30.2422,
-    lng: 120.1492,
-    image_url: 'https://images.unsplash.com/photo-1529921879218-f99546d03a9d?auto=format&fit=crop&q=80&w=1000'
+    name: 'Potala Palace',
+    name_zh: '布达拉宫',
+    province: 'Tibet',
+    description: 'A massive fortress-like complex in Lhasa, formerly the winter palace of the Dalai Lamas, and a masterpiece of Tibetan architecture.',
+    category: 'Ancient',
+    lat: 29.6577,
+    lng: 91.1172,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Potala%20Palace.jpg'
+  },
+  {
+    id: 'sample-4',
+    name: 'The Bund',
+    name_zh: '外滩',
+    province: 'Shanghai',
+    description: 'A famous waterfront area which runs along the western bank of the Huangpu River, featuring dozens of historical buildings in various architectural styles.',
+    category: 'Modern',
+    lat: 31.2415,
+    lng: 121.4842,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/The%20Bund.jpg'
+  },
+  {
+    id: 'sample-5',
+    name: 'Canton Tower',
+    name_zh: '广州塔',
+    province: 'Guangdong',
+    description: 'A multipurpose observation tower in Guangzhou, known for its distinct hyper-curved design and soaring height.',
+    category: 'Modern',
+    lat: 23.1065,
+    lng: 113.3242,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/canton%20tower.jpg'
+  },
+  {
+    id: 'sample-6',
+    name: 'Terracotta Army',
+    name_zh: '秦始皇兵马俑',
+    province: 'Shaanxi',
+    description: 'A collection of terracotta sculptures depicting the armies of Qin Shi Huang, the first Emperor of China, buried with him for protection in the afterlife.',
+    category: 'Ancient',
+    lat: 34.3841,
+    lng: 109.2785,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Terracotta%20Army.jpg'
+  },
+  {
+    id: 'sample-7',
+    name: 'Lijiang Old Town',
+    name_zh: '丽江古城',
+    province: 'Yunnan',
+    description: 'A UNESCO World Heritage site known for its unique blend of indigenous architectural traditions and sophisticated water-supply system.',
+    category: 'Ancient',
+    lat: 26.8721,
+    lng: 100.2274,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Lijiang%20Old%20Town.jpg'
+  },
+  {
+    id: 'sample-8',
+    name: 'Mogao Caves',
+    name_zh: '莫高窟',
+    province: 'Gansu',
+    description: 'Also known as the Caves of the Thousand Buddhas, the Mogao Caves form a system of 492 temples southeast of the center of Dunhuang.',
+    category: 'Ancient',
+    lat: 40.0425,
+    lng: 94.8111,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/China_Magao-scaled.jpg'
+  },
+  {
+    id: 'sample-9',
+    name: 'Chongqing Art Museum',
+    name_zh: '重庆美术馆',
+    province: 'Chongqing',
+    description: 'A striking modern museum located in the heart of Chongqing, featuring a bold red lattice "chopstick" design.',
+    category: 'Modern',
+    lat: 29.5630,
+    lng: 106.5770,
+    image_url: 'https://sefqcqhksupblrprcuzi.supabase.co/storage/v1/object/public/3dfile/Chongqing_Art_Museum.jpg'
   }
 ];
 
@@ -112,21 +178,47 @@ export default function MapPage() {
   const mapRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<any[]>([]);
+  const amapPromiseRef = useRef<Promise<any> | null>(null);
 
   useEffect(() => {
-    const fetchLandmarks = async () => {
+  const fetchLandmarks = async () => {
       try {
+        console.log('Fetching landmarks from database...');
         const { data, error } = await supabase
           .from('landmarks')
           .select('*')
           .order('name', { ascending: true });
         
-        if (error) throw error;
-        setLandmarks(data && data.length > 0 ? data : sampleLandmarks);
+        if (error) {
+          console.error('Fetch error:', error);
+          throw error;
+        }
+        
+        const dbLandmarks = data || [];
+        console.log(`Successfully fetched ${dbLandmarks.length} landmarks.`);
+        
+        // Prioritize local sampleLandmarks (the user's direct requests) over database items
+        const merged = [...sampleLandmarks];
+        
+        // Add database items only if they don't overlap by name with our high-quality hand-picked samples
+        dbLandmarks.forEach(dbL => {
+          const existingIdx = merged.findIndex(s => s.name.toLowerCase().trim() === dbL.name.toLowerCase().trim());
+          if (existingIdx === -1) {
+            merged.push(dbL);
+          } else {
+            // Prefer the DB image and ID if it matches a sample name (syncing IDs)
+            merged[existingIdx] = { ...merged[existingIdx], image_url: dbL.image_url, id: dbL.id };
+          }
+        });
+
+        setLandmarks(merged);
+        if (dbLandmarks.length > 0) {
+          toast.success('Live database synchronized');
+        }
       } catch (err: any) {
-        console.error('Error fetching landmarks:', err);
+        console.error('Detailed Error fetching landmarks:', err);
         setLandmarks(sampleLandmarks);
-        toast.error('Using sample data: Database connection failed');
+        toast.error('Sync notice: Using regional master copies');
       }
     };
 
@@ -151,71 +243,95 @@ export default function MapPage() {
   useEffect(() => {
     // Amap Security Config
     (window as any)._AMapSecurityConfig = {
-      securityJsCode: import.meta.env.VITE_AMAP_SECRET || '850a1836abcd4a800204300fbdb2f417',
+      securityJsCode: import.meta.env.VITE_AMAP_SECRET || '',
     };
 
-    AMapLoader.load({
-      key: import.meta.env.VITE_AMAP_KEY || '6bdf31318eda98960bd2d707da16fcd3',
-      version: '2.0',
-      plugins: ['AMap.Scale', 'AMap.ToolBar', 'AMap.ControlBar', 'AMap.MouseTool'],
-    }).then((AMap) => {
-      if (!containerRef.current) return;
-
-      if (mapRef.current) {
-        mapRef.current.destroy();
-      }
-
-      const map = new AMap.Map(containerRef.current, {
-        viewMode: '3D',
-        zoom: 5,
-        center: [116.397428, 39.90923], // Beijing center
-        theme: 'amap://styles/light',
-      });
-
-      map.addControl(new AMap.Scale());
-      map.addControl(new AMap.ToolBar());
-      map.addControl(new AMap.ControlBar({
-        position: { top: '10px', right: '10px' }
-      }));
-
-      mapRef.current = map;
-      setMapLoaded(true);
-
-      map.on('click', () => {
-        setSelectedLandmark(null);
-      });
-
-      // Add markers if landmarks exist
-      if (landmarks.length > 0) {
-        // Clear old markers
-        markersRef.current.forEach(m => m.marker.setMap(null));
-        markersRef.current = [];
-
-        landmarks.forEach(landmark => {
-          const marker = new AMap.Marker({
-            position: [landmark.lng, landmark.lat],
-            title: landmark.name,
-            map: map,
-          });
-
-          marker.on('click', () => {
-            setSelectedLandmark(landmark);
-          });
-
-          marker.on('mouseover', () => {
-            handleMouseEnter(landmark);
-          });
-
-          marker.on('mouseout', () => {
-            handleMouseLeave();
-          });
-
-          markersRef.current.push({ id: landmark.id, marker });
+    const loadAMap = async () => {
+      if (!amapPromiseRef.current) {
+        amapPromiseRef.current = AMapLoader.load({
+          key: import.meta.env.VITE_AMAP_KEY || '',
+          version: '2.0',
+          plugins: ['AMap.Scale', 'AMap.ToolBar', 'AMap.ControlBar', 'AMap.MouseTool'],
         });
       }
-    }).catch(e => {
-      console.error('AMap Loader Error:', e);
-    });
+
+      try {
+        const AMap = await amapPromiseRef.current;
+        if (!containerRef.current) return;
+
+        if (mapRef.current) {
+          mapRef.current.destroy();
+        }
+
+        const map = new AMap.Map(containerRef.current, {
+          viewMode: '3D',
+          zoom: 5,
+          center: [116.397428, 39.90923], // Beijing center
+          theme: 'amap://styles/light',
+        });
+
+        map.addControl(new AMap.Scale());
+        map.addControl(new AMap.ToolBar());
+        map.addControl(new AMap.ControlBar({
+          position: { top: '10px', right: '10px' }
+        }));
+
+        mapRef.current = map;
+        setMapLoaded(true);
+
+        map.on('click', () => {
+          setSelectedLandmark(null);
+        });
+
+        // Add markers if landmarks exist
+        if (landmarks.length > 0) {
+          // Clear old markers
+          markersRef.current.forEach(m => m.marker.setMap(null));
+          markersRef.current = [];
+
+          landmarks.forEach(landmark => {
+            // Custom Marker with Image
+            const markerContent = document.createElement('div');
+            markerContent.className = 'custom-marker';
+            markerContent.innerHTML = `
+              <div class="relative group cursor-pointer">
+                <div class="w-12 h-12 rounded-full border-4 border-primary shadow-xl overflow-hidden transform transition-transform group-hover:scale-125 bg-white">
+                  <img src="${landmark.image_url}" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
+                </div>
+                <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-black/80 text-white text-[10px] px-2 py-1 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                  ${landmark.name}
+                </div>
+              </div>
+            `;
+
+            const marker = new AMap.Marker({
+              position: [landmark.lng, landmark.lat],
+              content: markerContent,
+              offset: new AMap.Pixel(-24, -24),
+              map: map,
+            });
+
+            marker.on('click', () => {
+              setSelectedLandmark(landmark);
+            });
+
+            marker.on('mouseover', () => {
+              handleMouseEnter(landmark);
+            });
+
+            marker.on('mouseout', () => {
+              handleMouseLeave();
+            });
+
+            markersRef.current.push({ id: landmark.id, marker });
+          });
+        }
+      } catch (e) {
+        console.warn('Map initialization deferred or missing key context:', e);
+      }
+    };
+
+    loadAMap();
 
     return () => {
       if (hideTimeoutRef.current) {
@@ -274,14 +390,25 @@ export default function MapPage() {
         )}
       >
         <div className="p-3 space-y-3 border-b border-border">
-          <div className="space-y-0.5">
-            <div className="inline-flex items-center space-x-2 text-primary">
-              <div className="h-px w-3 bg-primary" />
-              <span className="font-serif italic text-[10px] font-bold uppercase tracking-widest">Cartography 绘图</span>
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <div className="inline-flex items-center space-x-2 text-primary">
+                <div className="h-px w-3 bg-primary" />
+                <span className="font-serif italic text-[10px] font-bold uppercase tracking-widest">Cartography 绘图</span>
+              </div>
+              <h1 className="text-xl font-serif font-bold tracking-tight leading-[0.9]">
+                MAP <span className="text-primary italic">NAVIGATOR</span>
+              </h1>
             </div>
-            <h1 className="text-xl font-serif font-bold tracking-tight leading-[0.9]">
-              MAP <span className="text-primary italic">NAVIGATOR</span>
-            </h1>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 rounded-full hover:bg-primary/10 text-primary"
+              onClick={() => window.location.reload()}
+              title="Sync Refresh"
+            >
+              <Globe className="h-4 w-4" />
+            </Button>
           </div>
           
           <div className="relative">

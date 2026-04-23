@@ -9,6 +9,7 @@ import BlogPostDetail from './pages/BlogPostDetail';
 import BlogEdit from './pages/BlogEdit';
 import MapPage from './pages/Map';
 import Learn from './pages/Learn';
+import Architects from './pages/Architects';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import SupabaseDemo from './pages/SupabaseDemo';
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/blog/:id" element={<BlogPostDetail />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/learn" element={<Learn />} />
+        <Route path="/architects" element={<Architects />} />
         <Route path="/auth" element={<Auth />} />
         
         <Route path="/dashboard" element={

@@ -9,7 +9,9 @@ import { Search, Filter, Calendar, User as UserIcon, ArrowRight } from 'lucide-r
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 
-const categories = ['All', 'Food', 'Art', 'History', 'Landmark', 'Culture'];
+import { featuredStories } from '@/src/data/blogData';
+
+const categories = ['All', 'Architects', 'Modern', 'History', 'Structural', 'Gardens'];
 
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -36,10 +38,22 @@ export default function Blog() {
 
         const { data, error: fetchError } = await query;
         if (fetchError) throw fetchError;
-        setPosts(data || []);
+        
+        // Combine DB posts with our curated ones (ensuring no duplicates if we re-run seed later)
+        const dbPosts = data || [];
+        const combined = [...dbPosts];
+        
+        // Add curated stories if they aren't already represented (by title)
+        featuredStories.forEach(fs => {
+          if (!dbPosts.some(p => p.title === fs.title)) {
+            combined.push(fs);
+          }
+        });
+
+        setPosts(combined);
       } catch (err: any) {
         console.error('Fetch error:', err);
-        setError(err.message || 'Failed to connect to the database.');
+        setPosts(featuredStories); // Fallback to curated content on failure
       } finally {
         setLoading(false);
       }
@@ -48,10 +62,12 @@ export default function Blog() {
     fetchPosts();
   }, [categoryFilter]);
 
-  const filteredPosts = posts.filter(post => 
-    post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredPosts = posts.filter(post => {
+    const matchesCategory = categoryFilter === 'all' || post.category.toLowerCase() === categoryFilter.toLowerCase();
+    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         post.content.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -63,13 +79,13 @@ export default function Blog() {
         <div className="space-y-6 max-w-2xl">
           <div className="inline-flex items-center space-x-4 text-primary">
             <div className="h-px w-12 bg-primary" />
-            <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">The Chronicle 编年史</span>
+            <span className="font-serif italic text-lg sm:text-xl font-bold uppercase tracking-widest">The Design Journals 设计日志</span>
           </div>
           <h1 className="text-5xl sm:text-7xl font-serif font-bold tracking-tight leading-[0.85]">
-            COMMUNITY <br /> <span className="text-primary italic">STORIES</span>
+            ARCHITECTURAL <br /> <span className="text-primary italic">CHRONICLES</span>
           </h1>
           <p className="text-xl sm:text-2xl font-serif text-muted-foreground leading-relaxed italic">
-            Insights, guides, and personal experiences from the heart of the Middle Kingdom.
+            Deep insights into the minds of pioneering architects and ancient builders.
           </p>
         </div>
         
