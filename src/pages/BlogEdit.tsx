@@ -98,14 +98,14 @@ export default function BlogEdit() {
     const filePath = `${user?.id}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from('blog-assets')
+      .from('images blog')
       .upload(filePath, file);
 
     if (uploadError) {
       toast.error(uploadError.message);
     } else {
       const { data: { publicUrl } } = supabase.storage
-        .from('blog-assets')
+        .from('images blog')
         .getPublicUrl(filePath);
 
       if (type === 'thumbnail') {
